@@ -12,16 +12,8 @@ class MultiCurveBootstrapper:
         ois_curve = OISCurve()
 
         for i, swap in enumerate(self.ois_swaps):
-            fixed_leg_pv = 0.0
-            if i > 0:
-                for j in range(1, len(times)):
-                    delta = times[j] - times[j - 1]
-                    # this needs to be fixed to handle df from ois curve, including interpolated dfs
-                    fixed_leg_pv += swap.fixed_rate * delta * dfs[j]
-
-            prev_maturity = times[-1]
-            delta = swap.maturity - prev_maturity
-            df = (1 - fixed_leg_pv) / (1 + swap.fixed_rate * delta)
+            k = sum(0.25 * swap.fixed_rate * ois_curve.df(t) for t in times[1:])
+            df = (1 - k) / (0.25 * swap.fixed_rate + 1)
 
             times.append(swap.maturity)
             dfs.append(df)
@@ -48,6 +40,7 @@ class MultiCurveBootstrapper:
     def fit(self):
         ois_curve = self.bootstrap_ois()
         ibor_3m_curve = self.bootstrap_ibor3m(ois_curve)
+
         return {
             "ois" : ois_curve,
             "3m" : ibor_3m_curve
