@@ -19,4 +19,4 @@ def test_bootstrapper():
     ibor3m_curve = curves["3m"]
 
     assert ois_curve.df(0.25) == pytest.approx(0.99997500062)
-    assert(ibor3m_curve.forward_rate(0, 0.25)) == pytest.approx(0.001)
+    assert ibor3m_curve.forward_rate(0, 0.25) == pytest.approx(0.001)
