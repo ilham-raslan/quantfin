@@ -99,7 +99,6 @@ print("Implied vol for T=2, K=105, F=98 is " + str(vol_surface.get_vol(2, 105, 9
 - Implement multiple interpolation techniques (linear, spline, monotone)
 
 ### 2. Volatility Calibration
-- Add tests for the volatility library
 - Pricing and Product-specific SABR calibration for:
   - Caplets
   - Swaptions
