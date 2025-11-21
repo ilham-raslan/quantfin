@@ -130,9 +130,9 @@ print("Implied vol for T=2, K=105, F=98 is " + str(vol_surface.get_vol(2, 105, 9
 # Referenced Literature
 
 ### Bootstrapping
-- Interpolation Methods for Curve Construction by Hagan
 - Interest Rate Bootstrapping Explained by XAIA Investment
 - A Teaching Note on Pricing and Valuing Interest Rate Swaps using LIBOR and OIS Discounting by Donald J. Smith
+- Interpolation Methods for Curve Construction by Hagan
 
 ### Volatility Surface Calibration
 - Managing Smile Risk by Hagan
