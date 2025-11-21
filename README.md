@@ -2,10 +2,9 @@
 
 > ⚠️ **Disclaimer:** QuantFin is an educational project. It is **not intended for production use** or for making real financial decisions. Use at your own risk. This library is designed for learning, experimentation, and research purposes only.
 
-QuantFin is a lightweight Python library for working with interest-rate derivatives and curves.  
+QuantFin is a lightweight Python library for interest-rate derivatives and curves.  
 It provides tools for building discount and forecasting curves, pricing standard interest-rate instruments, and exploring volatility modeling.  
 The library is designed to be **educational, modular, and extensible**, making it easy to experiment with multi-curve frameworks and volatility calibration techniques.
-
 
 ---
 
@@ -20,7 +19,7 @@ The library is designed to be **educational, modular, and extensible**, making i
 
 ### Volatility & Calibration
 - Generic volatility surface and calibrator
-- SABR-style parameter fitting to market vols
+- SABR-style parameter fitting to market volatilities
 - Product-specific calibration (caplets, swaptions) planned for future releases
 
 ---
@@ -33,8 +32,7 @@ pip install -r requirements.txt
 ```
 
 ### Example: Bootstrapping Swap Curves
-See:  
-`examples/example_bootstrap.py`
+See: `examples/example_bootstrap.py`
 
 ```python
 from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
@@ -55,8 +53,7 @@ print(ibor_curve.forward_rate(1.0, 1.25))
 ```
 
 ### Example: Pricing Swaps  
-See:  
-`examples/example_bootstrap.py`
+See: `examples/example_bootstrap.py`
 
 ```python
 ois_swap = OISSwap(3.0, 0.0023, 100)
@@ -67,13 +64,11 @@ price = swap3m.price(ois_curve, ibor_curve)
 ```
 
 ### Example: Volatility Calibration
-See:  
-`examples/example_vol_calibration.py`
+See: `examples/example_vol_calibration.py`
 
 ```python
 from quantfin.vol.vol_surface import VolSurface
 
-# Market data for testing
 market_options = [
     { "expiry": 1.0, "strike": 100, "market_vol": 0.20, "forward": 100 },
     { "expiry": 1.0, "strike": 105, "market_vol": 0.22, "forward": 100 },
@@ -81,19 +76,14 @@ market_options = [
     { "expiry": 2.0, "strike": 105, "market_vol": 0.23, "forward": 100 },
 ]
 
-# Separate lists for the surface
 expiry_list = [opt["expiry"] for opt in market_options]
 strike_list = [opt["strike"] for opt in market_options]
 market_vol_list = [opt["market_vol"] for opt in market_options]
 forward_list = [opt["forward"] for opt in market_options]
 
-# Create a VolSurface object
 vol_surface = VolSurface(expiry_list, strike_list, market_vol_list, forward_list)
-
-# Calibrate the model to the market vols
 vol_surface.calibrate()
 
-# Query the calibrated surface for implied vols
 print("Implied vol for T=1.5, K=102, F=100:", vol_surface.get_vol(1.5, 102, 100))
 print("Implied vol for T=1, K=100, F=100:", vol_surface.get_vol(1, 100, 100))
 print("Implied vol for T=2, K=105, F=100:", vol_surface.get_vol(2, 105, 100))
@@ -103,72 +93,48 @@ print("Implied vol for T=2, K=105, F=100:", vol_surface.get_vol(2, 105, 100))
 
 # Future Work
 
-Below is the recommended roadmap, broken down by module category.
-
----
-
-## **1. Bootstrapping Swap Curves**
-- Add interpolation for missing tenors / broken-tenor instruments during bootstrapping
-- Support for more IBOR tenors, including 1m and 6m, bootstrapped using basis swaps
+### 1. Bootstrapping Swap Curves
+- Interpolation for missing tenors and broken-tenor instruments
+- Support additional IBOR tenors (1m, 6m) via basis swaps
 - Implement multiple interpolation techniques (linear, spline, monotone)
 
----
-
-## **2. Volatility Calibration**
-- Tests for volatility library
+### 2. Volatility Calibration
+- Add tests for the volatility library
 - Product-specific SABR calibration for:
   - Caplets
   - Swaptions
-- Add logic for extrapolation
+- Implement extrapolation logic for strikes/expiries beyond market data
 
----
+### 3. Risk Greeks
+- Develop library for calculating delta, gamma, vega, and other risk measures
 
-## **3. Risk Greeks**
-- Library for calculating risk greeks for the supported instruments
+### 4. Monte Carlo Pricing
+- Generic Monte Carlo engine for pricing more complex instruments
 
----
+### 5. Performance & Vectorisation
+- Profile calibration and bootstrapping routines
+- Optimize using vectorised operations or JIT compilation
 
-## **4. Monte Carlo Pricing**
-- Monte Carlo pricing engine to price more products generically
+### 6. Documentation & Readability
+- Add detailed docstrings to all core classes/functions
+- Enhance README with diagrams illustrating module interactions
 
----
+### 7. Real Market Data Integration
+- Enable calibration and pricing using live market data from APIs
 
-## **5. Performance and Vectorisation**
-- Profile existing code for calibration/bootstrapping to see performance bottlenecks
-- Use Vectorisation to accelerate calibration loops
-
----
-
-## **6. Documentation and Readability**
-- More details docstrings
-- Improve README with diagrams of how different modules interact
-
----
-
-## **7. Real Market Data Integration**
-- Run against real market data pulled via APIs
-
----
-
-## **8. Risk Scenarios**
-- Build scenario-run functionality: shock interest rates, re-bootstrap, shock vols, etc.
-- Show how these changes propagate to PnL or risk metrics
+### 8. Risk Scenarios
+- Implement scenario analysis: shock interest rates, re-bootstrap, shock volatilities
+- Visualize and quantify PnL/risk impact
 
 ---
 
 # Referenced Literature
 
----
-
-## **1. Bootstrapping**
+### Bootstrapping
 - Interpolation Methods for Curve Construction by Hagan
 - Interest Rate Bootstrapping Explained by XAIA Investment
-- A Teaching Note On Pricing and Valuing Interest Rate Swaps using LIBOR and OIS Discounting by Donald J. Smith
+- A Teaching Note on Pricing and Valuing Interest Rate Swaps using LIBOR and OIS Discounting by Donald J. Smith
 
----
-
-## **2. Vol Surface Calibration**
+### Volatility Surface Calibration
 - Managing Smile Risk by Hagan
-- Equivalent Black Volatilies by Hagan
-
----
+- Equivalent Black Volatilities by Hagan
