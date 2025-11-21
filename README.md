@@ -110,7 +110,7 @@ Below is the recommended roadmap, broken down by module category.
 ## **1. Bootstrapping Swap Curves**
 - Add interpolation for missing tenors / broken-tenor instruments during bootstrapping
 - Support for more IBOR tenors, including 1m and 6m, bootstrapped using basis swaps
-- Add some sort of spline interpolation method
+- Implement multiple interpolation techniques (linear, spline, monotone)
 
 ---
 
@@ -119,6 +119,40 @@ Below is the recommended roadmap, broken down by module category.
 - Product-specific SABR calibration for:
   - Caplets
   - Swaptions
+- Add logic for extrapolation
+
+---
+
+## **3. Risk Greeks**
+- Library for calculating risk greeks for the supported instruments
+
+---
+
+## **4. Monte Carlo Pricing**
+- Monte Carlo pricing engine to price more products generically
+
+---
+
+## **5. Performance and Vectorisation**
+- Profile existing code for calibration/bootstrapping to see performance bottlenecks
+- Use Vectorisation to accelerate calibration loops
+
+---
+
+## **6. Documentation and Readability**
+- More details docstrings
+- Improve README with diagrams of how different modules interact
+
+---
+
+## **7. Real Market Data Integration**
+- Run against real market data pulled via APIs
+
+---
+
+## **8. Risk Scenarios**
+- Build scenario-run functionality: shock interest rates, re-bootstrap, shock vols, etc.
+- Show how these changes propagate to PnL or risk metrics
 
 ---
 
