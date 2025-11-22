@@ -14,11 +14,11 @@ ois_curve = curves["ois"]
 ibor3m_curve = curves["3m"]
 
 # price an example OIS Swap
-ois_swap = OISSwap(3, 0.0021, 100)
+ois_swap = OISSwap(3, 0.021, 100)
 ois_swap_price = ois_swap.price(ois_curve)
-print("3y ois swap with notional 100 and fixed rate 0.0021 is priced at " + str(ois_swap_price))
+print("3y ois swap with notional 100 and fixed rate 0.021 is priced at " + str(ois_swap_price))
 
 # price an example 3m Ibor Swap
-ibor3m_swap = Swap3M(3, 0.003, 100)
+ibor3m_swap = Swap3M(3, 0.03, 100)
 ibor3m_swap_price = ibor3m_swap.price(ois_curve, ibor3m_curve)
-print("3y ibor 3m swap with notional 100 and fixed rate 0.003 is priced at " + str(ibor3m_swap_price))
+print("3y ibor 3m swap with notional 100 and fixed rate 0.03 is priced at " + str(ibor3m_swap_price))
