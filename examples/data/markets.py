@@ -1,8 +1,7 @@
-from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
 from quantfin.instruments.ois_swap import OISSwap
 from quantfin.instruments.swap_3m import Swap3M
 
-ois_swaps = [
+OIS_SWAPS = [
     OISSwap(0.25, 0.00010),
     OISSwap(0.50, 0.00020),
     OISSwap(0.75, 0.00030),
@@ -25,7 +24,7 @@ ois_swaps = [
     OISSwap(5.00, 0.00490)
 ]
 
-swaps3m = [
+SWAPS_3M = [
     Swap3M(0.25, 0.0010),
     Swap3M(0.50, 0.0012),
     Swap3M(0.75, 0.0015),
@@ -48,17 +47,9 @@ swaps3m = [
     Swap3M(5.00, 0.0075)
 ]
 
-bootstrapper = MultiCurveBootstrapper(ois_swaps, swaps3m)
-curves = bootstrapper.fit()
-
-ois_curve = curves["ois"]
-ibor3m_curve = curves["3m"]
-
-df_1y = ois_curve.df(1.0)
-print("1y ois discounting: " + str(df_1y))
-
-zero = ois_curve.zero_rate(1.5)
-print("1.5y ois zero rate: " + str(zero))
-
-fwd = ibor3m_curve.forward_rate(1.0, 1.25)
-print("1.0 to 1.25 forward rate: " + str(fwd))
+SABR_DATA = [
+    { "expiry": 1.0, "strike": 100, "market_vol": 0.2, "forward": 99 },
+    { "expiry": 1.0, "strike": 105, "market_vol": 0.22, "forward": 99  },
+    { "expiry": 2.0, "strike": 100, "market_vol": 0.21, "forward": 98  },
+    { "expiry": 2.0, "strike": 105, "market_vol": 0.23, "forward": 98  }
+]
