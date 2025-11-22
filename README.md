@@ -100,28 +100,37 @@ print("Implied vol for T=2, K=105, F=98 is " + str(vol_surface.get_vol(2, 105, 9
 
 ### 2. Volatility Calibration
 - Pricing and Product-specific SABR calibration for:
-  - Caplets
   - Swaptions
 - Implement extrapolation logic for strikes/expiries beyond market data
 
-### 3. Risk Greeks
+### 3. Accuracy Metrics
+- Curve Fitting
+  - Error metrics including RMSE between market swap rates and model-implied swap rates
+  - Maximum absolute error
+- Volatility Calibration
+  - RMSE of vol differences
+  - Maximum absolute vol deviation
+- End-to-end pricing and price deviations
+- Unit/regressiontests
+
+### 4. Risk Greeks
 - Develop library for calculating delta, gamma, vega, and other risk measures
 
-### 4. Monte Carlo Pricing
+### 5. Monte Carlo Pricing
 - Generic Monte Carlo engine for pricing more complex instruments
 
-### 5. Performance & Vectorisation
+### 6. Performance & Vectorisation
 - Profile calibration and bootstrapping routines
 - Optimize using vectorised operations or JIT compilation
 
-### 6. Documentation & Readability
+### 7. Documentation & Readability
 - Add detailed docstrings to all core classes/functions
 - Enhance README with diagrams illustrating module interactions
 
-### 7. Real Market Data Integration
+### 8. Real Market Data Integration
 - Enable calibration and pricing using live market data from APIs
 
-### 8. Risk Scenarios
+### 9. Risk Scenarios
 - Implement scenario analysis: shock interest rates, re-bootstrap, shock volatilities
 - Visualize and quantify PnL/risk impact
 
