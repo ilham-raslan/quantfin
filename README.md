@@ -219,3 +219,4 @@ print("Caplet price:", price)
 ### Volatility Surface Calibration
 - Managing Smile Risk by Hagan
 - Equivalent Black Volatilities by Hagan
+- Options, Futures and Other Derivatives by Hull
