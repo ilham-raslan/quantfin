@@ -184,7 +184,7 @@ print("Caplet price:", price)
   - RMSE of vol differences
   - Maximum absolute vol deviation
 - End-to-end pricing and price deviations
-- Unit/regressiontests
+- Unit/regression tests
 
 ### 4. Risk Greeks
 - Develop library for calculating delta, gamma, vega, and other risk measures
@@ -194,7 +194,7 @@ print("Caplet price:", price)
 
 ### 6. Performance & Vectorisation
 - Profile calibration and bootstrapping routines
-- Optimise using vectorised operations or JIT compilation
+- Optimise using vectorised operations or
 
 ### 7. Documentation & Readability
 - Add detailed docstrings to all core classes/functions
