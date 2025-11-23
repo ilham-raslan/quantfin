@@ -1,6 +1,5 @@
 from quantfin.vol.vol_calibrator import VolCalibrator
 
-
 class VolSurface:
     """Represents a volatility surface: vol = f(strike, expiry)"""
 
