@@ -209,6 +209,8 @@ print("Caplet price:", price)
 - Interest Rate Bootstrapping Explained by XAIA Investment
 - A Teaching Note on Pricing and Valuing Interest Rate Swaps using LIBOR and OIS Discounting by Donald J. Smith
 - Interpolation Methods for Curve Construction by Hagan
+- Interest Rate Models - Theory and Practice by Brigo and Mercurio
+- Options, Futures and Other Derivatives by Hull
 
 ### Volatility Surface Calibration
 - Managing Smile Risk by Hagan
