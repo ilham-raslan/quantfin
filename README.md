@@ -174,7 +174,6 @@ print("Caplet price:", price)
 ### 2. Volatility Calibration
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
-- Implement extrapolation logic for strikes/expiries beyond market data
 
 ### 3. Accuracy Metrics
 - Tests for interpolated values, not just at knots
