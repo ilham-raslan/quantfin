@@ -43,15 +43,22 @@ See: `examples/example_bootstrap.py`
 from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
 from quantfin.instruments.ois_swap import OISSwap
 from quantfin.instruments.swap_3m import Swap3M
+from quantfin.instruments.ois_future import OISFuture
 
 # Explicit market data
+ois_futures = [
+    OISFuture(0.25, 0.9810),
+    OISFuture(0.50, 0.9805),
+    OISFuture(0.75, 0.9800),
+    OISFuture(1.00, 0.9795),
+    OISFuture(1.25, 0.9790),
+    OISFuture(1.50, 0.9785),
+    OISFuture(1.75, 0.9780)
+]
+
 ois_swaps = [
-    OISSwap(0.25, 0.010),
-    OISSwap(0.50, 0.020),
-    OISSwap(0.75, 0.030),
-    OISSwap(1.00, 0.050),
-    OISSwap(1.25, 0.070),
-    OISSwap(1.50, 0.090)
+    OISSwap(2.00, 0.0220),
+    OISSwap(3.00, 0.0240),
 ]
 
 swaps3m = [
@@ -63,7 +70,9 @@ swaps3m = [
     Swap3M(1.50, 0.038)
 ]
 
-bootstrapper = MultiCurveBootstrapper(ois_swaps, swaps3m)
+ois_instruments = ois_futures + ois_swaps
+
+bootstrapper = MultiCurveBootstrapper(ois_instruments, swaps3m)
 curves = bootstrapper.fit()
 
 ois_curve = curves["ois"]
@@ -167,7 +176,6 @@ print("Caplet price:", price)
 # Future Work
 
 ### 1. Bootstrapping Swap Curves
-- Currently bootstraps OIS from quarterly paying OIS swaps at all tenors which is unrealistic, this should use more realistic OIS instruments
 - Support additional IBOR tenors (1m, 6m) via basis swaps
 - Implement multiple interpolation techniques (linear, spline, monotone)
 
