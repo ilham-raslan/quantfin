@@ -180,6 +180,7 @@ print("Caplet price:", price)
 - Implement multiple interpolation techniques (linear, spline, monotone)
 
 ### 2. Volatility Calibration
+- Own implementation of least squares solver for vol calibration for academic purposes
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
 
