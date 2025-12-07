@@ -27,15 +27,9 @@ class GaussNewtonOptimiser:
         rho_deltas = (rho_up_residuals - base_residuals) / 0.01
         nu_deltas = (nu_up_residuals - base_residuals) / 0.01
 
-        jacobian = np.hstack((alpha_deltas.reshape(data_points, 1), rho_deltas.reshape(data_points, 1), nu_deltas).reshape(data_points, 1))
+        jacobian = np.hstack((alpha_deltas.reshape(data_points, 1), rho_deltas.reshape(data_points, 1), nu_deltas.reshape(data_points, 1)))
 
-        print("Dummy")
-
-        x1, x2 = x
-        return np.array([
-            [ 2 * x1, 1 ],
-            [ 1, 2 * x2 ]
-        ])
+        return jacobian
 
     def optimise(self, x0, max_iter=20, tol=1e-6):
         x = x0[0], x0[1], x0[2]
