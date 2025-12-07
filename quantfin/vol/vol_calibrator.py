@@ -8,7 +8,6 @@ from quantfin.vol.vol_model import VolModel
 class VolCalibrator:
     """Generic VolCalibrator class"""
 
-    # def __init__(self, expiries, strikes, market_vols, forwards, engine="scipy"):
     def __init__(self, expiries, strikes, market_vols, forwards, engine="gauss_newton_unconstrained"):
         self.expiries = expiries
         self.strikes = strikes
@@ -33,7 +32,7 @@ class VolCalibrator:
             market_vols = np.array(self.market_vols)
 
             # initial guesses
-            x0 = np.array([0.2, -0.2, 0.5])
+            x0 = np.array([0.2, 0.2, 0.5])
 
             lower = [1e-8, -0.999, 1e-8]
             upper = [10.0, 0.999, 5.0]
@@ -58,13 +57,14 @@ class VolCalibrator:
 
             # Fitted parameters
             alpha_fit, rho_fit, nu_fit = result.x
-            print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         elif self.engine == "gauss_newton_unconstrained":
             optimiser = GaussNewtonOptimiser(self.residuals, self.expiries, self.strikes, self.market_vols, self.forwards)
-            x0 = np.array([0.2, -0.2, 0.5])
+            x0 = np.array([0.2, 0.2, 0.5])
             params = optimiser.optimise(x0)
+            alpha_fit, rho_fit, nu_fit = params
+            print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         elif self.engine == "levenberg_marquardt_unconstrained":
-            pass
+            raise Exception( "levenberg_marquardt_unconstrained currently unsupported")
         else:
             raise Exception("Calibration engine " + self.engine + " unsupported")
 

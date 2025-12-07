@@ -8,6 +8,7 @@ class GaussNewtonOptimiser:
         self.market_vols = market_vols
         self.forwards = forwards
 
+    # TODO: Clean params up, actually used passed in params
     def jacobian(self, params, expiries, strikes, forwards, market_vols):
         # Finite difference calculation of the jacobians
         x = params
@@ -34,26 +35,22 @@ class GaussNewtonOptimiser:
     def optimise(self, x0, max_iter=20, tol=1e-6):
         x = x0[0], x0[1], x0[2]
 
-        residuals = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
-        jacobian = self.jacobian(x, self.expiries, self.strikes, self.forwards, self.market_vols)
+        for k in range(max_iter):
+            r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
+            print(f"Iter {k}: ||r|| = {np.linalg.norm(r):.4e}, x = {x}")
 
-        print("Dummy")
+            J = self.jacobian(x, self.expiries, self.strikes, self.forwards, self.market_vols)
 
-        # for k in range(max_iter):
-        #     r = self.residuals(x)
-        #     print(f"Iter {k}: ||r|| = {np.linalg.norm(r):.4e}, x = {x}")
-        #
-        #     J = jacobian(x)
-        #
-        #     p = -np.linalg.inv(J.T @ J) @ (J.T @ r)
-        #
-        #     x_new = x + p
-        #     r_new = residuals(x)
-        #
-        #     print(f"Iter {k}: ||r|| = {np.linalg.norm(r_new):.4e}, x = {x_new},")
-        #     x = x_new
-        #
-        #     if np.linalg.norm(p) < tol:
-        #         break
+            p = -np.linalg.inv(J.T @ J) @ (J.T @ r)
+
+            # reduced step size of 0.1
+            x_new = x + 0.1 * p
+            r_new = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
+
+            print(f"Iter {k}: ||r|| = {np.linalg.norm(r_new):.4e}, x = {x_new},")
+            x = x_new
+
+            if np.linalg.norm(p) < tol:
+                break
 
         return x
