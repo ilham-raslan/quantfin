@@ -23,9 +23,9 @@ class Caplet3MVolCalibrator:
 
         return expiries, strikes, market_vols, forwards
 
-    def calibrate(self):
+    def calibrate(self, engine="scipy"):
         expiries, strikes, market_vols, forwards = self.extract_vol_data()
 
         base_calibrator = VolCalibrator(expiries, strikes, market_vols, forwards)
 
-        return base_calibrator.calibrate()
+        return base_calibrator.calibrate(engine=engine)

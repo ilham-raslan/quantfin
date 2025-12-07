@@ -15,9 +15,9 @@ class Caplet3MVolSurface:
     def add_caplet(self, caplet):
         self.caplets.append(caplet)
 
-    def calibrate(self):
+    def calibrate(self, engine="scipy"):
         calibrator = Caplet3MVolCalibrator(self.caplets, self.ibor_curve)
-        self.model = calibrator.calibrate()
+        self.model = calibrator.calibrate(engine=engine)
 
     def get_vol(self, expiry, strike, forward):
         """Return interpolated vol for a given expiry/strike"""

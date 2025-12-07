@@ -16,9 +16,9 @@ class VolSurface:
         self.vols.append(vol)
         self.forwards.append(forward)
 
-    def calibrate(self):
+    def calibrate(self, engine="scipy"):
         calibrator = VolCalibrator(self.expiries, self.strikes, self.vols, self.forwards)
-        self.model = calibrator.calibrate()
+        self.model = calibrator.calibrate(engine=engine)
 
     def get_vol(self, expiry, strike, forward):
         """Return interpolated vol for a given expiry/strike"""

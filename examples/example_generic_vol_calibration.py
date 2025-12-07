@@ -14,7 +14,7 @@ forward_list = [opt["forward"] for opt in market_options]
 
 vol_surface = VolSurface(expiry_list, strike_list, market_vol_list, forward_list)
 
-vol_surface.calibrate()
+vol_surface.calibrate(engine="scipy")
 
 print("Implied vol for T=1.5, K=102, F=98.5 is " + str(vol_surface.get_vol(1.5, 102, 98.5)))
 print("Implied vol for T=1, K=100, F=99 is " + str(vol_surface.get_vol(1, 100, 99)))

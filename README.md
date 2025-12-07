@@ -21,6 +21,7 @@ The library is designed to be **educational, modular, and extensible**, making i
 - Generic volatility surface and calibrator
 - SABR-style parameter fitting to market volatilities
 - Caplet-specific calibration
+- Gauss-Newton implementation of vol surface optimiser, currently unconstrained
 
 ---
 
@@ -180,7 +181,8 @@ print("Caplet price:", price)
 - Implement multiple interpolation techniques (linear, spline, monotone)
 
 ### 2. Volatility Calibration
-- Own implementation of least squares solver for vol calibration for academic purposes
+- Own Levenberg-Marquardt optimiser for the vol surface
+- Upgrade both Gauss-Newton and Levenberg-Marquardt optimisers to be constrained
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
 
@@ -224,3 +226,4 @@ print("Caplet price:", price)
 - Managing Smile Risk by Hagan
 - Equivalent Black Volatilities by Hagan
 - Options, Futures and Other Derivatives by Hull
+- Numerical Optimization by Nocedal

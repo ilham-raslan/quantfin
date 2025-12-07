@@ -8,8 +8,7 @@ class GaussNewtonOptimiser:
         self.market_vols = market_vols
         self.forwards = forwards
 
-    # TODO: Clean params up, actually used passed in params
-    def jacobian(self, params, expiries, strikes, forwards, market_vols):
+    def jacobian(self, params):
         # Finite difference calculation of the jacobians
         x = params
         base_residuals = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
@@ -32,14 +31,14 @@ class GaussNewtonOptimiser:
 
         return jacobian
 
-    def optimise(self, x0, max_iter=20, tol=1e-6):
+    def optimise(self, x0, max_iter=100, tol=1e-6):
         x = x0[0], x0[1], x0[2]
 
         for k in range(max_iter):
             r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
             print(f"Iter {k}: ||r|| = {np.linalg.norm(r):.4e}, x = {x}")
 
-            J = self.jacobian(x, self.expiries, self.strikes, self.forwards, self.market_vols)
+            J = self.jacobian(x)
 
             p = -np.linalg.inv(J.T @ J) @ (J.T @ r)
 

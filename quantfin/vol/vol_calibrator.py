@@ -8,12 +8,11 @@ from quantfin.vol.vol_model import VolModel
 class VolCalibrator:
     """Generic VolCalibrator class"""
 
-    def __init__(self, expiries, strikes, market_vols, forwards, engine="gauss_newton_unconstrained"):
+    def __init__(self, expiries, strikes, market_vols, forwards):
         self.expiries = expiries
         self.strikes = strikes
         self.market_vols = market_vols
         self.forwards = forwards
-        self.engine = engine
 
     def residuals(self, params, expiries, strikes, forwards, market_vols):
         alpha, rho, nu = params
@@ -24,8 +23,8 @@ class VolCalibrator:
             for T, K, F, market_vol in zip(expiries, strikes, forwards, market_vols)
         ])
 
-    def calibrate(self):
-        if self.engine == "scipy":
+    def calibrate(self, engine="scipy"):
+        if engine == "scipy":
             expiries = np.array(self.expiries)
             strikes = np.array(self.strikes)
             forwards = np.array(self.forwards)
@@ -42,7 +41,8 @@ class VolCalibrator:
                 x0=x0,
                 bounds=(lower, upper),
                 args=(expiries, strikes, forwards, market_vols),
-                method='trf'
+                method='trf',
+                verbose=1
             )
 
             residuals = result.fun
@@ -57,14 +57,15 @@ class VolCalibrator:
 
             # Fitted parameters
             alpha_fit, rho_fit, nu_fit = result.x
-        elif self.engine == "gauss_newton_unconstrained":
+            print("Fitted params:", alpha_fit, rho_fit, nu_fit)
+        elif engine == "gauss_newton":
             optimiser = GaussNewtonOptimiser(self.residuals, self.expiries, self.strikes, self.market_vols, self.forwards)
             x0 = np.array([0.2, 0.2, 0.5])
             params = optimiser.optimise(x0)
             alpha_fit, rho_fit, nu_fit = params
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
-        elif self.engine == "levenberg_marquardt_unconstrained":
-            raise Exception( "levenberg_marquardt_unconstrained currently unsupported")
+        elif engine == "levenberg_marquardt":
+            raise Exception( "levenberg_marquardt currently unsupported")
         else:
             raise Exception("Calibration engine " + self.engine + " unsupported")
 
