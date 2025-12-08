@@ -2,6 +2,7 @@ import numpy as np
 from scipy.optimize import least_squares
 
 from quantfin.optimiser.gauss_newton_optimiser import GaussNewtonOptimiser
+from quantfin.optimiser.levenberg_marquardt_optimiser import LevenbergMarquardtOptimiser
 from quantfin.vol.vol_model import VolModel
 
 
@@ -65,8 +66,11 @@ class VolCalibrator:
             alpha_fit, rho_fit, nu_fit = params
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         elif engine == "levenberg_marquardt":
-            raise Exception( "levenberg_marquardt currently unsupported")
+            optimiser = LevenbergMarquardtOptimiser(self.residuals, self.expiries, self.strikes, self.market_vols, self.forwards)
+            x0 = np.array([0.2, 0.2, 0.5])
+            params = optimiser.optimise(x0)
+            alpha_fit, rho_fit, nu_fit = params
         else:
-            raise Exception("Calibration engine " + self.engine + " unsupported")
+            raise Exception("Calibration engine " + engine + " unsupported")
 
         return VolModel(alpha_fit, rho_fit, nu_fit)

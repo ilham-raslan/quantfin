@@ -21,7 +21,7 @@ The library is designed to be **educational, modular, and extensible**, making i
 - Generic volatility surface and calibrator
 - SABR-style parameter fitting to market volatilities
 - Caplet-specific calibration
-- Gauss-Newton implementation of vol surface optimiser, currently unconstrained
+- Gauss-Newton and Levenberg-Marquardt implementation of vol surface optimiser, currently unconstrained
 
 ---
 
@@ -179,10 +179,11 @@ print("Caplet price:", price)
 ### 1. Bootstrapping Swap Curves
 - Support additional IBOR tenors (1m, 6m) via basis swaps
 - Implement multiple interpolation techniques (linear, spline, monotone)
+- Implement a global curve-fitting technique as an option instead of bootstrapping
 
 ### 2. Volatility Calibration
-- Own Levenberg-Marquardt optimiser for the vol surface
 - Upgrade both Gauss-Newton and Levenberg-Marquardt optimisers to be constrained
+- Plot residuals over iterations of optimiser
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
 
