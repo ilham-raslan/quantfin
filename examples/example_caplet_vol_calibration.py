@@ -17,7 +17,11 @@ ibor3m_curve = curves["3m"]
 
 # Build the vol surface
 caplet3m_vol_surface =  Caplet3MVolSurface(caplets, ibor3m_curve)
-# caplet3m_vol_surface.calibrate(engine="gauss_newton")
-caplet3m_vol_surface.calibrate(engine="levenberg_marquardt")
+# Options:
+# scipy: Standard python library
+# gauss_newton: Own implementation
+# levenberg_marquardt: Own implementation
+# sqp: Own implementation
+caplet3m_vol_surface.calibrate(engine="sqp")
 
 caplet3m_vol_surface.plot_calibrated_vol_surface(0, 5, 0.001, 0.05)

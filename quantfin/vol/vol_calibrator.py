@@ -3,6 +3,7 @@ from scipy.optimize import least_squares
 
 from quantfin.optimiser.gauss_newton_optimiser import GaussNewtonOptimiser
 from quantfin.optimiser.levenberg_marquardt_optimiser import LevenbergMarquardtOptimiser
+from quantfin.optimiser.sqp_optimiser import SQPOptimiser
 from quantfin.vol.vol_model import VolModel
 
 
@@ -67,6 +68,17 @@ class VolCalibrator:
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         elif engine == "levenberg_marquardt":
             optimiser = LevenbergMarquardtOptimiser(self.residuals, self.expiries, self.strikes, self.market_vols, self.forwards)
+            x0 = np.array([0.2, 0.2, 0.5])
+            params = optimiser.optimise(x0)
+            alpha_fit, rho_fit, nu_fit = params
+        elif engine == "gauss_newton":
+            optimiser = GaussNewtonOptimiser(self.residuals, self.expiries, self.strikes, self.market_vols, self.forwards)
+            x0 = np.array([0.2, 0.2, 0.5])
+            params = optimiser.optimise(x0)
+            alpha_fit, rho_fit, nu_fit = params
+            print("Fitted params:", alpha_fit, rho_fit, nu_fit)
+        elif engine == "sqp":
+            optimiser = SQPOptimiser(self.residuals, self.expiries, self.strikes, self.market_vols, self.forwards)
             x0 = np.array([0.2, 0.2, 0.5])
             params = optimiser.optimise(x0)
             alpha_fit, rho_fit, nu_fit = params
