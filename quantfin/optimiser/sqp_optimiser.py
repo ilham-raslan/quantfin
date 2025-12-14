@@ -2,10 +2,10 @@ import numpy as np
 
 from quantfin.optimiser.base_optimiser import BaseOptimiser
 
-# Getting around going out of bounds with NaNs
-# 1. Somewhat arbitrary step size of alpha on calculated step, should figure a better way to determine
-# 2. BFGS update can divide by 0, so skip it if denominator is too small
-# 3. Capping finite difference bounds so we don't hit NaNs
+# Getting around going out of bounds with NaNs/singular matrix errors
+# 1. BFGS update can divide by 0, so skip it if denominator is too small
+# 2. Capping on next step and finite difference bounds so we don't hit NaNs
+# 3. Levenberg-Marquardt step instead of plain Gauss-Newton to avoid singular matrix errors
 
 class SQPOptimiser(BaseOptimiser):
     def objective(self, params):
@@ -64,9 +64,9 @@ class SQPOptimiser(BaseOptimiser):
     # Clamp off params during FD, otherwise we go out of bounds
     def safe_params(self, x):
         return np.array([
-            max(x[0], 1e-8),
-            np.clip(x[1], -0.999, 0.999),
-            max(x[2], 1e-8)
+            max(x[0], 1e-3),
+            np.clip(x[1], -0.9999, 0.9999),
+            max(x[2], 1e-3)
         ])
 
     def jacobian(self, params):
@@ -95,27 +95,35 @@ class SQPOptimiser(BaseOptimiser):
     def optimise(self, x0, max_iter=100, tol=1e-6):
         x = x0.copy()
         B = np.eye(3)
+        lam = 1e-2
+        nu = 10
 
         for k in range(max_iter):
-            print(f"Iter {k}: x = {x}, f ={self.objective(x):.4f}")
+            f0 = self.objective(x)
+            print(f"Iter {k}: x = {x}, f ={f0:.4f}")
 
             # Gradients
             grad = self.gradient_objective(x)
 
-            A = self.gradient_constraints()[self.constraints(x) >= -1e-8]
-            c = self.constraints(x)[self.constraints(x) >= -1e-8]
+            A = self.gradient_constraints()[self.constraints(x) >= -1e-3]
+            c = self.constraints(x)[self.constraints(x) >= -1e-3]
 
             if len(A) > 0:
+                # If constrained, perform KKT step
+                print(f"{c} active constraint(s), performing KKT step")
                 p, _ = self.solve_qp_subproblem(B, grad, A, c)
             else:
-                # Gauss-Newton step
+                # Levenberg-Marquardt step
+                print(" No active constraints, performing unconstrained Levenberg-Marquardt step")
                 J = self.jacobian(x)
                 r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
-                p = -np.linalg.inv(J.T @ J) @ (J.T @ r)
+                H = J.T @ J
+                H_lm = H + lam + np.eye(len(x))
+                grad = J.T @ r
+                p = -np.linalg.inv(H_lm) @ grad
 
-            alpha = 0.5 # somewhat arbitrary choice of step size, figure out better way to determine this
-            p *= alpha
-            x_new = x + p
+            x_new = self.safe_params(x + p)
+            f_new = self.objective(x_new)
 
             # BFGS update for B
             s = p
@@ -126,7 +134,11 @@ class SQPOptimiser(BaseOptimiser):
             if ys > 1e-10 and s @ B @ s > 1e-10:
                 B = B + np.outer(y, y) / ys - (B @ np.outer(s, s) @ B) / (s @ B @ s)
 
-            x = x_new
+            if f_new < f0:
+                x = x_new
+                lam /= nu
+            else:
+                lam *= nu
 
             if np.linalg.norm(p) < 1e-8:
                 break
