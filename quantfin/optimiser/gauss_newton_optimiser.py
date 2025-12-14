@@ -14,8 +14,8 @@ class GaussNewtonOptimiser(BaseOptimiser):
 
             p = -np.linalg.inv(J.T @ J) @ (J.T @ r)
 
-            # reduced step size of 0.1
-            x_new = x + 0.1 * p
+            # reduced step size of 0.5
+            x_new = x + 0.5 * p
             r_new = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
 
             print(f"Iter {k}: ||r|| = {np.linalg.norm(r_new):.4e}, x = {x_new},")

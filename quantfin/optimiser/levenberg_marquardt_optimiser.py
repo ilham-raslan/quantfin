@@ -16,8 +16,8 @@ class LevenbergMarquardtOptimiser(BaseOptimiser):
 
             p = -(np.linalg.inv(J.T @ J + lam * np.eye(len(x)))) @ (J.T @ r)
 
-            # reduced step size of 0.1
-            x_new = x + 0.1 * p
+            # reduced step size of 0.5
+            x_new = x + 0.5 * p
             r_new = self.residuals(x_new, self.expiries, self.strikes, self.forwards, self.market_vols)
 
             if np.linalg.norm(r_new) < np.linalg.norm(r):

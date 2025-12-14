@@ -21,7 +21,7 @@ The library is designed to be **educational, modular, and extensible**, making i
 - Generic volatility surface and calibrator
 - SABR-style parameter fitting to market volatilities
 - Caplet-specific calibration
-- Gauss-Newton and Levenberg-Marquardt implementation of vol surface optimiser, currently unconstrained
+- Constrained optimiser implemented with a combination of SQP and Gauss-Newton step
 
 ---
 
@@ -182,7 +182,6 @@ print("Caplet price:", price)
 - Implement a global curve-fitting technique as an option instead of bootstrapping
 
 ### 2. Volatility Calibration
-- Upgrade both Gauss-Newton and Levenberg-Marquardt optimisers to be constrained
 - Plot residuals over iterations of optimiser
 - Pricing and Product-specific SABR calibration for:
   - Swaptions

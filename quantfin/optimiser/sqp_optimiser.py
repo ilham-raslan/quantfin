@@ -3,9 +3,9 @@ import numpy as np
 from quantfin.optimiser.base_optimiser import BaseOptimiser
 
 # Getting around going out of bounds with NaNs
-# 1. Capping finite difference bounds so we don't hit NaNs
+# 1. Somewhat arbitrary step size of alpha on calculated step, should figure a better way to determine
 # 2. BFGS update can divide by 0, so skip it if denominator is too small
-# 3. KKT system can be singular, so regularise it
+# 3. Capping finite difference bounds so we don't hit NaNs
 
 class SQPOptimiser(BaseOptimiser):
     def objective(self, params):
@@ -32,10 +32,10 @@ class SQPOptimiser(BaseOptimiser):
         nu = x[2]
 
         return np.array([
-            alpha,
+            -alpha,
             rho - 1,
             -1 - rho,
-            nu
+            -nu
         ])
 
     # Static based on constraints
@@ -48,9 +48,8 @@ class SQPOptimiser(BaseOptimiser):
         ])
 
     def solve_qp_subproblem(self, B, gradf, A, c):
-        B_reg = B + 1e-8 * np.eye(3)
         KKT = np.block([
-            [B_reg, A.T],
+            [B, A.T],
             [A, np.zeros((A.shape[0], A.shape[0]))]
         ])
 
@@ -95,7 +94,6 @@ class SQPOptimiser(BaseOptimiser):
 
     def optimise(self, x0, max_iter=100, tol=1e-6):
         x = x0.copy()
-        lam = np.zeros(1)
         B = np.eye(3)
 
         for k in range(max_iter):
@@ -108,11 +106,15 @@ class SQPOptimiser(BaseOptimiser):
             c = self.constraints(x)[self.constraints(x) >= -1e-8]
 
             if len(A) > 0:
-                p, lam_new = self.solve_qp_subproblem(B, grad, A, c)
+                p, _ = self.solve_qp_subproblem(B, grad, A, c)
             else:
-                p = -np.linalg.solve(B, grad)
-                lam_new = np.zeros(0)
+                # Gauss-Newton step
+                J = self.jacobian(x)
+                r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
+                p = -np.linalg.inv(J.T @ J) @ (J.T @ r)
 
+            alpha = 0.5 # somewhat arbitrary choice of step size, figure out better way to determine this
+            p *= alpha
             x_new = x + p
 
             # BFGS update for B
@@ -125,9 +127,8 @@ class SQPOptimiser(BaseOptimiser):
                 B = B + np.outer(y, y) / ys - (B @ np.outer(s, s) @ B) / (s @ B @ s)
 
             x = x_new
-            lam = lam_new
 
             if np.linalg.norm(p) < 1e-8:
                 break
 
-        return x, lam
+        return x
