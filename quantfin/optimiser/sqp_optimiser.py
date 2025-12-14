@@ -112,9 +112,11 @@ class SQPOptimiser(BaseOptimiser):
                 # If constrained, perform KKT step
                 print(f"{c} active constraint(s), performing KKT step")
                 p, _ = self.solve_qp_subproblem(B, grad, A, c)
+
+                x_new = self.safe_params(x + p)
             else:
                 # Levenberg-Marquardt step
-                print(" No active constraints, performing unconstrained Levenberg-Marquardt step")
+                print("No active constraints, performing unconstrained Levenberg-Marquardt step")
                 J = self.jacobian(x)
                 r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
                 H = J.T @ J
@@ -122,8 +124,14 @@ class SQPOptimiser(BaseOptimiser):
                 grad = J.T @ r
                 p = -np.linalg.inv(H_lm) @ grad
 
-            x_new = self.safe_params(x + p)
-            f_new = self.objective(x_new)
+                x_new = self.safe_params(x + p)
+                f_new = self.objective(x_new)
+
+                if f_new < f0:
+                    x = x_new
+                    lam /= nu
+                else:
+                    lam *= nu
 
             # BFGS update for B
             s = p
@@ -133,12 +141,6 @@ class SQPOptimiser(BaseOptimiser):
             # Want to ensure denominator isn't too small
             if ys > 1e-10 and s @ B @ s > 1e-10:
                 B = B + np.outer(y, y) / ys - (B @ np.outer(s, s) @ B) / (s @ B @ s)
-
-            if f_new < f0:
-                x = x_new
-                lam /= nu
-            else:
-                lam *= nu
 
             if np.linalg.norm(p) < 1e-8:
                 break
