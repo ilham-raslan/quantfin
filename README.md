@@ -1,10 +1,10 @@
 # QuantFin
 
-> ⚠️ **Disclaimer:** QuantFin is an educational project. It is **not intended for production use** or for making real financial decisions. Use at your own risk. This library is designed for learning, experimentation, and research purposes only.
+>**Disclaimer:** QuantFin is an educational project. It is **not intended for production use** or for making real financial decisions. Use at your own risk. This library is designed for learning, experimentation, and research purposes only.
 
 QuantFin is a lightweight Python library for interest-rate derivatives and curves.  
 It provides tools for building discount and forecasting curves, pricing standard interest-rate instruments, and exploring volatility modeling.  
-The library is designed to be **educational, modular, and extensible**, making it easy to experiment with multi-curve frameworks and volatility calibration techniques.
+The library is designed to be educational, modular, and extensible, making it easy to experiment with multi-curve frameworks and volatility calibration techniques.
 
 ---
 
@@ -172,7 +172,7 @@ print("Caplet price:", price)
 
 ### Notes
 
-* Explicit market data is included for Example 1 to show how bootstrapping works. Other examples use placeholders (`[...]`) to focus on **API usage** rather than data preparation.
+* Explicit market data is included for Example 1 to show how bootstrapping works. Other examples use placeholders (`[...]`) to focus on API usage rather than data preparation.
 
 # Future Work
 
