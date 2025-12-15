@@ -1,6 +1,6 @@
 # QuantFin
 
-> ⚠️ **Disclaimer:** QuantFin is an educational project. It is **not intended for production use** or for making real financial decisions. Use at your own risk. This library is designed for learning, experimentation, and research purposes only.
+>**Disclaimer:** QuantFin is an educational project. It is **not intended for production use** or for making real financial decisions. Use at your own risk. This library is designed for learning, experimentation, and research purposes only.
 
 QuantFin is a lightweight Python library for interest-rate derivatives and curves.  
 It provides tools for building discount and forecasting curves, pricing standard interest-rate instruments, and exploring volatility modeling.  
