@@ -79,7 +79,7 @@ class VolCalibrator:
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         elif engine == "sqp":
             optimiser = SQPOptimiser(self.residuals, self.expiries, self.strikes, self.market_vols, self.forwards)
-            # x0 = np.array([0.00000001, 0.2, 0.00000001]) # Below is actual decent guess but this one is for testing constrained optimisation
+            # x0 = np.array([0.00000001, 0.8, 0.0000001]) # Below is actual decent guess but this one is for testing constrained optimisation
             x0 = np.array([0.2, 0.2, 0.5])
             params = optimiser.optimise(x0)
             alpha_fit, rho_fit, nu_fit = params

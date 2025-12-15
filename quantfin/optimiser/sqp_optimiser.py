@@ -3,9 +3,8 @@ import numpy as np
 from quantfin.optimiser.base_optimiser import BaseOptimiser
 
 # Getting around going out of bounds with NaNs/singular matrix errors
-# 1. BFGS update can divide by 0, so skip it if denominator is too small
-# 2. Capping on next step and finite difference bounds so we don't hit NaNs
-# 3. Levenberg-Marquardt step instead of plain Gauss-Newton to avoid singular matrix errors
+# 1. Capping on next step and finite difference bounds so we don't hit NaNs
+# 2. Levenberg-Marquardt step instead of plain Gauss-Newton to avoid singular matrix errors
 
 class SQPOptimiser(BaseOptimiser):
     def objective(self, params):
@@ -41,10 +40,10 @@ class SQPOptimiser(BaseOptimiser):
     # Static based on constraints
     def gradient_constraints(self):
         return np.array([
-            [1.0, 0.0, 0.0],
+            [-1.0, 0.0, 0.0],
             [0.0, 1.0, 0.0],
             [0.0, -1.0, 0.0],
-            [0.0, 0.0, 1],
+            [0.0, 0.0, -1.0],
         ])
 
     def solve_qp_subproblem(self, B, gradf, A, c):
@@ -108,23 +107,28 @@ class SQPOptimiser(BaseOptimiser):
             A = self.gradient_constraints()[self.constraints(x) >= -1e-3]
             c = self.constraints(x)[self.constraints(x) >= -1e-3]
 
+            J = self.jacobian(x)
+            H = J.T @ J
+
+            # empirically good step size here, can probably do better in justifying
+            alpha = 0.5
+
             if len(A) > 0:
                 # If constrained, perform KKT step
                 print(f"{c} active constraint(s), performing KKT step")
-                p, _ = self.solve_qp_subproblem(B, grad, A, c)
+                p, _ = self.solve_qp_subproblem(H, grad, A, c)
 
-                x_new = self.safe_params(x + p)
+                x_new = self.safe_params(x + alpha * p)
+                x = x_new
             else:
                 # Levenberg-Marquardt step
                 print("No active constraints, performing unconstrained Levenberg-Marquardt step")
-                J = self.jacobian(x)
+                H_lm = H + lam * np.eye(len(x))
                 r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
-                H = J.T @ J
-                H_lm = H + lam + np.eye(len(x))
                 grad = J.T @ r
                 p = -np.linalg.inv(H_lm) @ grad
 
-                x_new = self.safe_params(x + p)
+                x_new = self.safe_params(x + alpha * p)
                 f_new = self.objective(x_new)
 
                 if f_new < f0:
@@ -132,15 +136,6 @@ class SQPOptimiser(BaseOptimiser):
                     lam /= nu
                 else:
                     lam *= nu
-
-            # BFGS update for B
-            s = p
-            y = self.gradient_objective(x_new) - self.gradient_objective(x)
-            ys = y @ s
-
-            # Want to ensure denominator isn't too small
-            if ys > 1e-10 and s @ B @ s > 1e-10:
-                B = B + np.outer(y, y) / ys - (B @ np.outer(s, s) @ B) / (s @ B @ s)
 
             if np.linalg.norm(p) < 1e-8:
                 break
