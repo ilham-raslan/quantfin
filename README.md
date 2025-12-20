@@ -178,8 +178,8 @@ print("Caplet price:", price)
 
 ### 1. Bootstrapping Swap Curves
 - Support additional IBOR tenors (1m, 6m) via basis swaps
-- Implement multiple interpolation techniques (linear, spline, monotone)
-- Implement a global curve-fitting technique as an option instead of bootstrapping
+- Nelson-Siegel model global fit
+- Cubic spline interpolation
 
 ### 2. Volatility Calibration
 - Plot residuals over iterations of optimiser
