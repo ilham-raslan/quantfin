@@ -76,7 +76,7 @@ class VolCalibrator:
             params = optimiser.optimise(
                 x0,
                 self.residuals,
-                (self.expiries, self.strikes, self.market_vols, self.forwards),
+                (self.expiries, self.strikes, self.forwards, self.market_vols),
                 self.safe_params
             )
             alpha_fit, rho_fit, nu_fit = params
@@ -87,7 +87,7 @@ class VolCalibrator:
             params = optimiser.optimise(
                 x0,
                 self.residuals,
-                (self.expiries, self.strikes, self.market_vols, self.forwards),
+                (self.expiries, self.strikes, self.forwards, self.market_vols),
                 self.safe_params
             )
             alpha_fit, rho_fit, nu_fit = params
@@ -98,7 +98,7 @@ class VolCalibrator:
             params = optimiser.optimise(
                 x0,
                 self.residuals,
-                (self.expiries, self.strikes, self.market_vols, self.forwards),
+                (self.expiries, self.strikes, self.forwards, self.market_vols),
                 self.safe_params,
                 self.constraints,
                 self.gradient_constraints
