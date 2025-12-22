@@ -1,12 +1,42 @@
 import math
-
+import numpy as np
 
 class VolModel:
-    def __init__(self, alpha, rho, nu):
+    def __init__(self, alpha=0.1, rho=0, nu=0.1):
         self.alpha = alpha
         self.rho = rho
         self.nu = nu
         self.beta = 0.5
+
+    def safe_params(self, x):
+        return np.array([
+            max(x[0], 1e-8),
+            np.clip(x[1], -0.999, 0.999),
+            max(x[2], 1e-8)
+        ])
+
+    def constraints(self, params):
+        x = params
+
+        alpha = x[0]
+        rho = x[1]
+        nu = x[2]
+
+        return np.array([
+            -alpha,
+            rho - 1,
+            -1 - rho,
+            -nu
+        ])
+
+    # Static based on constraints
+    def gradient_constraints(self):
+        return np.array([
+            [-1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, -1.0, 0.0],
+            [0.0, 0.0, -1.0],
+        ])
 
     def get_vol(self, expiry, strike, forward):
         f = forward

@@ -7,44 +7,21 @@ from quantfin.optimiser.base_optimiser import BaseOptimiser
 # 2. Levenberg-Marquardt step instead of plain Gauss-Newton to avoid singular matrix errors
 
 class SQPOptimiser(BaseOptimiser):
-    def objective(self, params):
+    def objective(self, params, residuals, args):
         # Scalar objective function used for constrained optimisation
         x = params
-        residuals = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
+        residuals = residuals(x, args)
         return 0.5 * np.dot(residuals, residuals)
 
-    def gradient_objective(self, params):
+    def gradient_objective(self, params, residuals, args):
         # Finite difference calculation of scalar objective
         x = params
 
-        r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
-        J = self.jacobian(x)
+        r = residuals(x, args)
+        J = self.jacobian(x, residuals, args)
         grad = J.T @ r
 
         return grad
-
-    def constraints(self, params):
-        x = params
-
-        alpha = x[0]
-        rho = x[1]
-        nu = x[2]
-
-        return np.array([
-            -alpha,
-            rho - 1,
-            -1 - rho,
-            -nu
-        ])
-
-    # Static based on constraints
-    def gradient_constraints(self):
-        return np.array([
-            [-1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, -1.0, 0.0],
-            [0.0, 0.0, -1.0],
-        ])
 
     def solve_qp_subproblem(self, B, gradf, A, c):
         KKT = np.block([
@@ -60,53 +37,22 @@ class SQPOptimiser(BaseOptimiser):
 
         return p, lam
 
-    # Clamp off params during FD, otherwise we go out of bounds
-    def safe_params(self, x):
-        return np.array([
-            max(x[0], 1e-3),
-            np.clip(x[1], -0.9999, 0.9999),
-            max(x[2], 1e-3)
-        ])
-
-    def jacobian(self, params):
-        # Finite difference calculation of the jacobians
-        x = params
-        base_residuals = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
-        # bump alpha up by 0.01
-        alpha_up_x = self.safe_params((x[0] + 0.01, x[1], x[2]))
-        alpha_up_residuals = self.residuals(alpha_up_x, self.expiries, self.strikes, self.forwards, self.market_vols)
-
-        rho_up_x = self.safe_params((x[0], x[1] + 0.01, x[2]))
-        rho_up_residuals = self.residuals(rho_up_x, self.expiries, self.strikes, self.forwards, self.market_vols)
-
-        nu_up_x = self.safe_params((x[0], x[1], x[2] + 0.01))
-        nu_up_residuals = self.residuals(nu_up_x, self.expiries, self.strikes, self.forwards, self.market_vols)
-
-        data_points = len(self.expiries)
-        alpha_deltas = (alpha_up_residuals - base_residuals) / 0.01
-        rho_deltas = (rho_up_residuals - base_residuals) / 0.01
-        nu_deltas = (nu_up_residuals - base_residuals) / 0.01
-
-        jacobian = np.hstack((alpha_deltas.reshape(data_points, 1), rho_deltas.reshape(data_points, 1), nu_deltas.reshape(data_points, 1)))
-
-        return jacobian
-
-    def optimise(self, x0, max_iter=100, tol=1e-6):
+    def optimise(self, x0, residuals, args, safe_params=None, constraints=None, gradient_constraints=None, max_iter=100, tol=1e-6):
         x = x0.copy()
         lam = 1e-2
         nu = 10
 
         for k in range(max_iter):
-            f0 = self.objective(x)
+            f0 = self.objective(x, residuals, args)
             print(f"Iter {k}: x = {x}, f ={f0:.4f}")
 
             # Gradients
-            grad = self.gradient_objective(x)
+            grad = self.gradient_objective(x, residuals, args)
 
-            A = self.gradient_constraints()[self.constraints(x) >= -1e-3]
-            c = self.constraints(x)[self.constraints(x) >= -1e-3]
+            A = gradient_constraints()[constraints(x) >= -1e-3]
+            c = constraints(x)[constraints(x) >= -1e-3]
 
-            J = self.jacobian(x)
+            J = self.jacobian(x, residuals, args)
             H = J.T @ J
 
             # empirically good step size here, can probably do better in justifying
@@ -117,18 +63,18 @@ class SQPOptimiser(BaseOptimiser):
                 print(f"{c} active constraint(s), performing KKT step")
                 p, _ = self.solve_qp_subproblem(H, grad, A, c)
 
-                x_new = self.safe_params(x + alpha * p)
+                x_new = safe_params(x + alpha * p)
                 x = x_new
             else:
                 # Levenberg-Marquardt step
                 print("No active constraints, performing unconstrained Levenberg-Marquardt step")
                 H_lm = H + lam * np.eye(len(x))
-                r = self.residuals(x, self.expiries, self.strikes, self.forwards, self.market_vols)
+                r = residuals(x, args)
                 grad = J.T @ r
                 p = -np.linalg.inv(H_lm) @ grad
 
-                x_new = self.safe_params(x + alpha * p)
-                f_new = self.objective(x_new)
+                x_new = safe_params(x + alpha * p)
+                f_new = self.objective(x_new, residuals, args)
 
                 if f_new < f0:
                     x = x_new

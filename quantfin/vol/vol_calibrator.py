@@ -25,6 +25,16 @@ class VolCalibrator:
             for T, K, F, market_vol in zip(expiries, strikes, forwards, market_vols)
         ])
 
+    def safe_params(self, x):
+        return VolModel().safe_params(x)
+
+    def constraints(self, params):
+        return VolModel().constraints(params)
+
+    # Static based on constraints
+    def gradient_constraints(self):
+        return VolModel().gradient_constraints()
+
     def calibrate(self, engine="scipy"):
         if engine == "scipy":
             expiries = np.array(self.expiries)
@@ -61,39 +71,36 @@ class VolCalibrator:
             alpha_fit, rho_fit, nu_fit = result.x
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         elif engine == "gauss_newton":
-            optimiser = GaussNewtonOptimiser(
-                self.residuals,
-                self.expiries,
-                self.strikes,
-                self.market_vols,
-                self.forwards
-            )
+            optimiser = GaussNewtonOptimiser()
             x0 = np.array([0.2, 0.2, 0.5])
-            params = optimiser.optimise(x0)
+            params = optimiser.optimise(
+                x0,
+                self.residuals,
+                (self.expiries, self.strikes, self.market_vols, self.forwards)
+            )
             alpha_fit, rho_fit, nu_fit = params
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         elif engine == "levenberg_marquardt":
-            optimiser = LevenbergMarquardtOptimiser(
-                self.residuals,
-                self.expiries,
-                self.strikes,
-                self.market_vols,
-                self.forwards
-            )
+            optimiser = LevenbergMarquardtOptimiser()
             x0 = np.array([0.2, 0.2, 0.5])
-            params = optimiser.optimise(x0)
+            params = optimiser.optimise(
+                x0,
+                self.residuals,
+                (self.expiries, self.strikes, self.market_vols, self.forwards)
+            )
             alpha_fit, rho_fit, nu_fit = params
         elif engine == "sqp":
-            optimiser = SQPOptimiser(
-                self.residuals,
-                self.expiries,
-                self.strikes,
-                self.market_vols,
-                self.forwards
-            )
+            optimiser = SQPOptimiser()
             # x0 = np.array([0.00000001, 0.8, 0.0000001]) # Below is actual decent guess but this one is for testing constrained optimisation
             x0 = np.array([0.2, 0.2, 0.5])
-            params = optimiser.optimise(x0)
+            params = optimiser.optimise(
+                x0,
+                self.residuals,
+                (self.expiries, self.strikes, self.market_vols, self.forwards),
+                self.safe_params,
+                self.constraints,
+                self.gradient_constraints
+            )
             alpha_fit, rho_fit, nu_fit = params
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
         else:
