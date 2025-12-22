@@ -93,7 +93,6 @@ class SQPOptimiser(BaseOptimiser):
 
     def optimise(self, x0, max_iter=100, tol=1e-6):
         x = x0.copy()
-        B = np.eye(3)
         lam = 1e-2
         nu = 10
 
