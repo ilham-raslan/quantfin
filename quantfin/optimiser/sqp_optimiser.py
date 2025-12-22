@@ -10,17 +10,15 @@ class SQPOptimiser(BaseOptimiser):
     def objective(self, params, residuals, args):
         # Scalar objective function used for constrained optimisation
         x = params
-        expiries, strikes, forwards, market_vols = args
 
-        residuals = residuals(x, expiries, strikes, forwards, market_vols)
+        residuals = residuals(x, *args)
         return 0.5 * np.dot(residuals, residuals)
 
     def gradient_objective(self, params, residuals, args):
         # Finite difference calculation of scalar objective
         x = params
-        expiries, strikes, forwards, market_vols = args
 
-        r = residuals(x, expiries, strikes, forwards, market_vols)
+        r = residuals(x, *args)
         J = self.jacobian(x, residuals, args)
         grad = J.T @ r
 
@@ -73,7 +71,7 @@ class SQPOptimiser(BaseOptimiser):
                 # Levenberg-Marquardt step
                 print("No active constraints, performing unconstrained Levenberg-Marquardt step")
                 H_lm = H + lam * np.eye(len(x))
-                r = residuals(x, expiries, strikes, forwards, market_vols)
+                r = residuals(x, *args)
                 grad = J.T @ r
                 p = -np.linalg.inv(H_lm) @ grad
 
