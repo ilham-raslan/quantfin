@@ -76,7 +76,8 @@ class VolCalibrator:
             params = optimiser.optimise(
                 x0,
                 self.residuals,
-                (self.expiries, self.strikes, self.market_vols, self.forwards)
+                (self.expiries, self.strikes, self.market_vols, self.forwards),
+                self.safe_params
             )
             alpha_fit, rho_fit, nu_fit = params
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
@@ -86,7 +87,8 @@ class VolCalibrator:
             params = optimiser.optimise(
                 x0,
                 self.residuals,
-                (self.expiries, self.strikes, self.market_vols, self.forwards)
+                (self.expiries, self.strikes, self.market_vols, self.forwards),
+                self.safe_params
             )
             alpha_fit, rho_fit, nu_fit = params
         elif engine == "sqp":

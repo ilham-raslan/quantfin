@@ -13,7 +13,7 @@ class LevenbergMarquardtOptimiser(BaseOptimiser):
             r = residuals(x, expiries, strikes, forwards, market_vols)
             print(f"Iter {k}: ||r|| = {np.linalg.norm(r):.4e}, x = {x}")
 
-            J = self.jacobian(x, residuals, args)
+            J = self.jacobian(x, residuals, args, safe_params)
 
             p = -(np.linalg.inv(J.T @ J + lam * np.eye(len(x)))) @ (J.T @ r)
 
