@@ -7,26 +7,16 @@ class BaseOptimiser:
             def safe_params(y):
                 return y
 
-        expiries, strikes, forwards, market_vols = args
+        data_points = len(args[0])
 
         # Finite difference calculation of the jacobians
-        base_residuals = residuals(x, expiries, strikes, forwards, market_vols)
-        # bump alpha up by 0.01
-        alpha_up_x = safe_params((x[0] + 0.01, x[1], x[2]))
-        alpha_up_residuals = residuals(alpha_up_x, expiries, strikes, forwards, market_vols)
+        base_residuals = residuals(x, *args)
 
-        rho_up_x = safe_params((x[0], x[1] + 0.01, x[2]))
-        rho_up_residuals = residuals(rho_up_x, expiries, strikes, forwards, market_vols)
+        up_bumps = [safe_params([x[j] + 0.01 if i == j else x[j] for j in range(len(x))]) for i in range(len(x))]
+        up_bumps_residuals = [residuals(param, *args) for param in up_bumps]
+        deltas = [(up_bump_residuals - base_residuals) / 0.01 for up_bump_residuals in up_bumps_residuals]
 
-        nu_up_x = safe_params((x[0], x[1], x[2] + 0.01))
-        nu_up_residuals = residuals(nu_up_x, expiries, strikes, forwards, market_vols)
-
-        data_points = len(args[0])
-        alpha_deltas = (alpha_up_residuals - base_residuals) / 0.01
-        rho_deltas = (rho_up_residuals - base_residuals) / 0.01
-        nu_deltas = (nu_up_residuals - base_residuals) / 0.01
-
-        jacobian = np.hstack((alpha_deltas.reshape(data_points, 1), rho_deltas.reshape(data_points, 1), nu_deltas.reshape(data_points, 1)))
+        jacobian = np.hstack([delta.reshape(data_points, 1) for delta in deltas])
 
         return jacobian
 

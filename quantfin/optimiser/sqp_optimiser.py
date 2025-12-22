@@ -25,6 +25,8 @@ class SQPOptimiser(BaseOptimiser):
         return grad
 
     def solve_qp_subproblem(self, B, gradf, A, c):
+        param_count = len(B)
+
         KKT = np.block([
             [B, A.T],
             [A, np.zeros((A.shape[0], A.shape[0]))]
@@ -33,14 +35,13 @@ class SQPOptimiser(BaseOptimiser):
         rhs = -np.concatenate([gradf, c])
         sol = np.linalg.solve(KKT, rhs)
 
-        p = sol[:3]
-        lam = sol[3:]
+        p = sol[:param_count]
+        lam = sol[param_count:]
 
         return p, lam
 
     def optimise(self, x0, residuals, args, safe_params=None, constraints=None, gradient_constraints=None, max_iter=100, tol=1e-6):
         x = x0.copy()
-        expiries, strikes, forwards, market_vols = args
         lam = 1e-2
         nu = 10
 
