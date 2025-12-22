@@ -16,8 +16,9 @@ class VolCalibrator:
         self.market_vols = market_vols
         self.forwards = forwards
 
-    def residuals(self, params, expiries, strikes, forwards, market_vols):
+    def residuals(self, params, *args):
         alpha, rho, nu = params
+        expiries, strikes, forwards, market_vols = args
         model = VolModel(alpha, rho, nu)
 
         return np.array([
