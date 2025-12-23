@@ -26,10 +26,6 @@ class IBORCurve3M:
         intervals = int((t_end - t_start) * 10)
 
         tenors = np.linspace(t_start, t_end, intervals)
-        # bump 0 point with epsilon given divide by 0 error
-        # if tenors[0] == 0:
-        #     tenors[0] = tenors[0] + 1e-8
-
         forward_rates = [self.forward_rate(t, t + 0.25) for t in tenors]
 
         plt.plot(tenors, forward_rates, marker=".")
