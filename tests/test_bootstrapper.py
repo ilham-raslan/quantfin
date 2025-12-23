@@ -1,6 +1,7 @@
 import pytest
 
 from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
+from quantfin.curves.curve_manager import CurveManager
 from quantfin.instruments.ois_future import OISFuture
 from quantfin.instruments.ois_swap import OISSwap
 from quantfin.instruments.swap_3m import Swap3M
@@ -16,8 +17,8 @@ def test_bootstrapper_rates():
         Swap3M(0.25, 0.0230)
     ]
 
-    bootstrapper = MultiCurveBootstrapper(ois_swaps, swaps3m)
-    curves = bootstrapper.fit()
+    curve_manager = CurveManager()
+    curves = curve_manager.build(ois_swaps, swaps3m, mode="bootstrap")
 
     ois_curve = curves["ois"]
     ibor3m_curve = curves["3m"]
@@ -48,8 +49,8 @@ def test_bootstrapper_swap_prices():
 
     ois_instruments = ois_futures + ois_swaps
 
-    bootstrapper = MultiCurveBootstrapper(ois_instruments, swaps3m)
-    curves = bootstrapper.fit()
+    curve_manager = CurveManager()
+    curves = curve_manager.build(ois_instruments, swaps3m, mode="bootstrap")
 
     ois_curve = curves["ois"]
     ibor3m_curve = curves["3m"]
