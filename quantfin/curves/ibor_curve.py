@@ -20,8 +20,6 @@ class IBORCurve3M:
     def forward_rate(self, t1, t2):
         return (self.df(t1) / self.df(t2) - 1) / 0.25
 
-
-
     def plot_forward_rates(self, t_start=None, t_end=None):
         t_start = t_start if t_start is not None else 0
         t_end = t_end if t_end is not None else self.times[-2]
