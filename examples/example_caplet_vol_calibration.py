@@ -1,5 +1,5 @@
 from examples.data.markets import OIS_FUTURES, OIS_SWAPS, SWAPS_3M, CAPLETS_3M
-from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
+from quantfin.curves.curve_manager import CurveManager
 from quantfin.vol.caplet3m_vol_surface import Caplet3MVolSurface
 
 ois_futures = OIS_FUTURES
@@ -9,8 +9,8 @@ swaps3m = SWAPS_3M
 caplets = CAPLETS_3M
 
 # Build the OIS and 3m Ibor curve needed to price the caplet
-bootstrapper = MultiCurveBootstrapper(ois_swaps, swaps3m)
-curves = bootstrapper.fit()
+curve_manager = CurveManager()
+curves = curve_manager.build(ois_swaps, swaps3m)
 
 ois_curve = curves["ois"]
 ibor3m_curve = curves["3m"]

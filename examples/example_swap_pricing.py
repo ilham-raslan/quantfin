@@ -1,5 +1,6 @@
 from examples.data.markets import OIS_SWAPS, SWAPS_3M
 from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
+from quantfin.curves.curve_manager import CurveManager
 from quantfin.instruments.ois_swap import OISSwap
 from quantfin.instruments.swap_3m import Swap3M
 
@@ -7,8 +8,8 @@ from quantfin.instruments.swap_3m import Swap3M
 ois_swaps = OIS_SWAPS
 swaps3m = SWAPS_3M
 
-bootstrapper = MultiCurveBootstrapper(ois_swaps, swaps3m)
-curves = bootstrapper.fit()
+curve_manager = CurveManager()
+curves = curve_manager.build(ois_swaps, swaps3m)
 
 ois_curve = curves["ois"]
 ibor3m_curve = curves["3m"]
