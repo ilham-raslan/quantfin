@@ -22,7 +22,7 @@ class IBORCurveCalibrator:
         instruments, ois_curve = args
 
         return np.array([
-            instrument.price(ibor_curve, ois_curve)
+            instrument.price(ois_curve, ibor_curve)
             for instrument in instruments
         ])
 
