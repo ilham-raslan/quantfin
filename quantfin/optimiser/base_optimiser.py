@@ -2,7 +2,7 @@ import numpy as np
 
 class BaseOptimiser:
 
-    def jacobian(self, x, residuals, args, safe_params=None):
+    def jacobian(self, x, residuals, args, safe_params=None, bump=1e-6):
         if safe_params is None:
             def safe_params(y):
                 return y
@@ -12,9 +12,9 @@ class BaseOptimiser:
         # Finite difference calculation of the jacobians
         base_residuals = residuals(x, *args)
 
-        up_bumps = [safe_params([x[j] + 0.01 if i == j else x[j] for j in range(len(x))]) for i in range(len(x))]
+        up_bumps = [safe_params([x[j] + bump if i == j else x[j] for j in range(len(x))]) for i in range(len(x))]
         up_bumps_residuals = [residuals(param, *args) for param in up_bumps]
-        deltas = [(up_bump_residuals - base_residuals) / 0.01 for up_bump_residuals in up_bumps_residuals]
+        deltas = [(up_bump_residuals - base_residuals) / bump for up_bump_residuals in up_bumps_residuals]
 
         jacobian = np.hstack([delta.reshape(data_points, 1) for delta in deltas])
 
