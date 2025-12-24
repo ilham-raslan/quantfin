@@ -176,53 +176,27 @@ print("Caplet price:", price)
 
 # Future Work
 
-### 1. Bootstrapping Swap Curves
+### 1. Curve Construction
 - Support additional IBOR tenors (1m, 6m) via basis swaps
 - Nelson-Siegel model global fit
 - Cubic spline interpolation
+- Tests for interpolated values, not just at knots
 
 ### 2. Volatility Calibration
 - Plot residuals over iterations of optimiser
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
-
-### 3. Accuracy Metrics
-- Tests for interpolated values, not just at knots
-- Regression tests
-
-### 4. Risk Greeks
-- Develop library for calculating delta, gamma, vega, and other risk measures
-
-### 5. Monte Carlo Pricing
-- Generic Monte Carlo engine for pricing more complex instruments
-
-### 6. Performance & Vectorisation
-- Profile calibration and bootstrapping routines
-- Optimise using vectorised operations or
-
-### 7. Documentation & Readability
-- Add detailed docstrings to all core classes/functions
-- Enhance README with diagrams illustrating module interactions
-
-### 8. Real Market Data Integration
-- Enable calibration and pricing using live market data from APIs
-
-### 9. Risk Scenarios
-- Implement scenario analysis: shock interest rates, re-bootstrap, shock volatilities
-- Visualise and quantify PnL/risk impact
-
----
+- Performance tracking, e.g. residuals/RMSE over time, etc.
+- Better handling of singular values in calibration
 
 # Referenced Literature
 
-### Bootstrapping
 - Interest Rate Bootstrapping Explained by XAIA Investment
 - A Teaching Note on Pricing and Valuing Interest Rate Swaps using LIBOR and OIS Discounting by Donald J. Smith
 - Interpolation Methods for Curve Construction by Hagan
 - Interest Rate Models - Theory and Practice by Brigo and Mercurio
+- Parsimonious Modelling of Yield Curves by Nelson and Siegel
 - Options, Futures and Other Derivatives by Hull
-
-### Volatility Surface Calibration
 - Managing Smile Risk by Hagan
 - Equivalent Black Volatilities by Hagan
 - Options, Futures and Other Derivatives by Hull
