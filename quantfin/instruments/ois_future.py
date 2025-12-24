@@ -10,4 +10,5 @@ class OISFuture:
         return 1 - self.market_price
 
     def price(self, ois_curve):
-        return self.notional * (1 - ois_curve.df(self.maturity) / ois_curve.df(self.maturity + self.accrual))
+        forward_rate = (ois_curve.df(self.maturity) / ois_curve.df(self.maturity + self.accrual) - 1) / self.accrual
+        return self.notional * (1 - forward_rate)
