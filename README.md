@@ -188,7 +188,7 @@ For both curve construction and vol surface calibration, the general pattern is 
 3. CurveCalibrator calls the BaseOptimiser's optimise function, passing in the residuals that are a function of NelsonSiegelCurveModel
 4. Optimiser returns the calibrated params to the CurveCalibrator
 5. CurveCalibrator returns OIS and 3M Ibor curves based on the calibrated NelsonSiegel model params to the CurveManager
-6. CurveManger returns the same curves for the user to use to get dfs/pricing, etc.
+6. CurveManager returns the same curves for the user to use to get dfs/pricing, etc.
 
 ### Vol Surface Calibration (3M Caplet specific)
 1. User passes in caplets into Caplet3MVolSurface and calls calibrate()
