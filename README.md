@@ -178,7 +178,6 @@ print("Caplet price:", price)
 
 ### 1. Curve Construction
 - Support additional IBOR tenors (1m, 6m) via basis swaps
-- Improve accuracy of Nelson-Siegel fit, currently not quite fitting par swaps very well
 - Cubic spline interpolation
 - Tests for interpolated values, not just at knots
 
