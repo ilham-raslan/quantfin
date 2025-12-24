@@ -12,7 +12,7 @@ class NelsonSiegelCurveModel:
         if t <= 0.0:
             return 1.0
 
-        power_term = self.beta0 * t + (self.beta1 + self.beta2) * (1 - math.exp(-t / self.tau) * self.tau) - self.beta2 * t * math.exp(-t / self.tau)
+        power_term = self.beta0 * t + (self.beta1 + self.beta2) * (1 - math.exp(-t / self.tau)) * self.tau - self.beta2 * t * math.exp(-t / self.tau)
         df = math.exp(-power_term)
 
         return df
