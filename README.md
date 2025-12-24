@@ -179,6 +179,25 @@ print("Caplet price:", price)
 ## Class Diagram
 ![Class Diagram](./images/quantfin_class_diagram.png)
 
+## Key Flows
+For both curve construction and vol surface calibration, the general pattern is a class that acts as a user interface, a calibrator-like class that then calls into an optimiser (depending on its implementation) that optimises the parameters. Model-specific mathematics would live in specific model files (e.g. NelsonSiegelCurveModel, VolModel, etc.) which get passed into the residuals used for optimisation via the calibrator
+
+### Nelson Siegel Curve Calibration
+1. User passes in instruments into CurveManager and calls build()
+2. CurveManager calls CurveCalibrator's calibrate()
+3. CurveCalibrator calls the BaseOptimiser's optimise function, passing in the residuals that are a function of NelsonSiegelCurveModel
+4. Optimiser returns the calibrated params to the CurveCalibrator
+5. CurveCalibrator returns OIS and 3M Ibor curves based on the calibrated NelsonSiegel model params to the CurveManager
+6. CurveManger returns the same curves for the user to use to get dfs/pricing, etc.
+
+### Vol Surface Calibration (3M Caplet specific)
+1. User passes in caplets into Caplet3MVolSurface and calls calibrate()
+2. Caplet3MVolSurface calls VolCalibrator's calibrate()
+3. VolCalibrator calls the BaseOptimiser's optimise function, passing in the residuals that are a function of VolModel
+4. Optimiser returns the calibrated params to VolCalibrator
+5. VolCalibrator returns a VolModel object with the calibrated params to the Caplet3MVolSurface
+6. The user can now call get_vol on the Caplet3MVolSurface object which will obtain vols based on the fitted params
+
 ## Key Class Descriptions
 
 ### CurveManager
@@ -210,25 +229,6 @@ Handles parameter pass into optimiser, called by VolSurface when calling calibra
 
 ### BaseOptimiser
 Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardtOptimiser and SQPOptimiser with their own optimise() implementations
-
-## Key Flows
-For both curve construction and vol surface calibration, the general pattern is a class that acts as a user interface, a calibrator-like class that then calls into an optimiser (depending on its implementation) that optimises the parameters. Model-specific mathematics would live in specific model files (e.g. NelsonSiegelCurveModel, VolModel, etc.) which get passed into the residuals used for optimisation via the calibrator
-
-### Nelson Siegel Curve Calibration
-1. User passes in instruments into CurveManager and calls build()
-2. CurveManager calls CurveCalibrator's calibrate()
-3. CurveCalibrator calls the BaseOptimiser's optimise function, passing in the residuals that are a function of NelsonSiegelCurveModel
-4. Optimiser returns the calibrated params to the CurveCalibrator
-5. CurveCalibrator returns OIS and 3M Ibor curves based on the calibrated NelsonSiegel model params to the CurveManager
-6. CurveManger returns the same curves for the user to use to get dfs/pricing, etc.
-
-### Vol Surface Calibration (3M Caplet specific)
-1. User passes in caplets into Caplet3MVolSurface and calls calibrate()
-2. Caplet3MVolSurface calls VolCalibrator's calibrate()
-3. VolCalibrator calls the BaseOptimiser's optimise function, passing in the residuals that are a function of VolModel
-4. Optimiser returns the calibrated params to VolCalibrator
-5. VolCalibrator returns a VolModel object with the calibrated params to the Caplet3MVolSurface
-6. The user can now call get_vol on the Caplet3MVolSurface object which will obtain vols based on the fitted params
 
 # Future Work
 
