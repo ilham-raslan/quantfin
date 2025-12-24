@@ -26,16 +26,6 @@ class VolCalibrator:
             for T, K, F, market_vol in zip(expiries, strikes, forwards, market_vols)
         ])
 
-    def safe_params(self, x):
-        return VolModel().safe_params(x)
-
-    def constraints(self, params):
-        return VolModel().constraints(params)
-
-    # Static based on constraints
-    def gradient_constraints(self):
-        return VolModel().gradient_constraints()
-
     def calibrate(self, engine="scipy"):
         if engine == "scipy":
             expiries = np.array(self.expiries)
@@ -78,7 +68,7 @@ class VolCalibrator:
                 x0,
                 self.residuals,
                 (self.expiries, self.strikes, self.forwards, self.market_vols),
-                self.safe_params
+                VolModel().safe_params
             )
             alpha_fit, rho_fit, nu_fit = params
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
@@ -89,7 +79,7 @@ class VolCalibrator:
                 x0,
                 self.residuals,
                 (self.expiries, self.strikes, self.forwards, self.market_vols),
-                self.safe_params
+                VolModel().safe_params
             )
             alpha_fit, rho_fit, nu_fit = params
         elif engine == "sqp":
@@ -100,9 +90,9 @@ class VolCalibrator:
                 x0,
                 self.residuals,
                 (self.expiries, self.strikes, self.forwards, self.market_vols),
-                self.safe_params,
-                self.constraints,
-                self.gradient_constraints
+                VolModel().safe_params,
+                VolModel().constraints,
+                VolModel().gradient_constraints
             )
             alpha_fit, rho_fit, nu_fit = params
             print("Fitted params:", alpha_fit, rho_fit, nu_fit)
