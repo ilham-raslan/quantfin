@@ -18,7 +18,7 @@ class NelsonSiegelCurveModel:
         return df
 
     def zero_rate(self, t):
-        return -np.log(self.df(t) / t)
+        return -np.log(self.df(t)) / t
 
     def forward_rate(self, t1, t2):
         return (self.df(t1) / self.df(t2) - 1) / (t2 - t1)
