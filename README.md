@@ -238,11 +238,14 @@ Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardt
 - Tests for interpolated values, not just at knots
 
 ### 2. Volatility Calibration
-- Plot residuals over iterations of optimiser
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
+
+### 3. General Optimisation
 - Performance tracking, e.g. residuals/RMSE over time, etc.
 - Better handling of singular values in calibration
+- More aggressive step sizes combined with trust region guardrails, instead of current 0.5 multiplier
+- Caching for discount factors used in pricing 
 
 # Referenced Literature
 
