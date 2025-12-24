@@ -13,8 +13,8 @@ The library is designed to be educational, modular, and extensible, making it ea
 ### Curve Construction & Instrument Pricing
 - OIS discounting curve construction
 - IBOR forecasting curve (currently 3M)
-- Sequential curve bootstrapping
-- Discount factor interpolation
+- Nelson-Siegel curve fit
+- Sequential curve bootstrapping with log linear interpolation of discount factors
 - Swap pricing: OIS swaps and 3M swaps
 
 ### Volatility & Calibration
@@ -178,7 +178,7 @@ print("Caplet price:", price)
 
 ### 1. Curve Construction
 - Support additional IBOR tenors (1m, 6m) via basis swaps
-- Nelson-Siegel model global fit
+- Improve accuracy of Nelson-Siegel fit, currently not quite fitting par swaps very well
 - Cubic spline interpolation
 - Tests for interpolated values, not just at knots
 
