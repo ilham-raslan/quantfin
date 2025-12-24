@@ -4,7 +4,7 @@ from quantfin.optimiser.base_optimiser import BaseOptimiser
 
 class LevenbergMarquardtOptimiser(BaseOptimiser):
     def optimise(self, x0, residuals, args, safe_params=None, constraints=None, gradient_constraints=None, max_iter=100, tol=1e-6):
-        x = x0[0], x0[1], x0[2]
+        x = x0
         lam = 1e-3
         nu = 10
 
@@ -26,7 +26,7 @@ class LevenbergMarquardtOptimiser(BaseOptimiser):
             else:
                 lam *= nu
 
-            if np.linalg.norm(p) < tol:
+            if np.linalg.norm(p) < tol or np.linalg.norm(r_new) < tol:
                 break
 
         return x

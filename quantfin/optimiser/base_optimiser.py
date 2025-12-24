@@ -7,7 +7,7 @@ class BaseOptimiser:
             def safe_params(y):
                 return y
 
-        data_points = len(args[0])
+        data_points = len(args[0]) if isinstance(args, tuple) else len(args)
 
         # Finite difference calculation of the jacobians
         base_residuals = residuals(x, *args)

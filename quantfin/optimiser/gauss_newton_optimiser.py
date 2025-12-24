@@ -4,7 +4,7 @@ from quantfin.optimiser.base_optimiser import BaseOptimiser
 
 class GaussNewtonOptimiser(BaseOptimiser):
     def optimise(self, x0, residuals, args, safe_params=None, constraints=None, gradient_constraints=None, max_iter=100, tol=1e-6):
-        x = x0[0], x0[1], x0[2]
+        x = x0
 
         for k in range(max_iter):
             r = residuals(x, *args)
@@ -21,7 +21,7 @@ class GaussNewtonOptimiser(BaseOptimiser):
             print(f"Iter {k}: ||r|| = {np.linalg.norm(r_new):.4e}, x = {x_new},")
             x = x_new
 
-            if np.linalg.norm(p) < tol:
+            if np.linalg.norm(p) < tol or np.linalg.norm(r_new) < tol:
                 break
 
         return x

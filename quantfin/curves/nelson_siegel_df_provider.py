@@ -1,3 +1,6 @@
+import math
+import numpy as np
+
 class NelsonSiegelDFProvider:
     def __init__(self, beta0, beta1, beta2, tau):
         self.beta0 = beta0
@@ -5,8 +8,12 @@ class NelsonSiegelDFProvider:
         self.beta2 = beta2
         self.tau = tau
 
-    def zero_rate(self, t):
-        pass
-
     def df(self, t):
-        pass
+        power_term = self.beta0 * t + (self.beta1 + self.beta2) * (1 - math.exp(-t / self.tau) * self.tau) - self.beta2 * t * math.exp(-t / self.tau)
+        return math.exp(-power_term)
+
+    def zero_rate(self, t):
+        return -np.log(self.df(t) / t)
+
+    def forward_rate(self, t1, t2):
+        return (self.df(t1) / self.df(t2) - 1) / (t2 - t1)

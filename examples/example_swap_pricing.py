@@ -9,7 +9,7 @@ ois_swaps = OIS_SWAPS
 swaps3m = SWAPS_3M
 
 curve_manager = CurveManager()
-curves = curve_manager.build(ois_swaps, swaps3m, mode="bootstrap")
+curves = curve_manager.build(ois_swaps, swaps3m, mode="nelson_siegel", calibration_engine="levenberg_marquardt")
 
 ois_curve = curves["ois"]
 ibor3m_curve = curves["3m"]

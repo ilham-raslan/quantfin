@@ -16,7 +16,7 @@ class Curve:
 
     def plot_dfs(self, t_start=None, t_end=None):
         t_start = t_start if t_start is not None else 0
-        t_end = t_end if t_end is not None else self.df_provider.times[-1]
+        t_end = t_end if t_end is not None else 50
         intervals = int((t_end - t_start) * 10)
 
         tenors = np.linspace(t_start, t_end, intervals)
@@ -31,7 +31,7 @@ class Curve:
 
     def plot_zero_rates(self, t_start=None, t_end=None):
         t_start = t_start if t_start is not None else 0
-        t_end = t_end if t_end is not None else self.df_provider.times[-1]
+        t_end = t_end if t_end is not None else 50
         intervals = int((t_end - t_start) * 10)
 
         tenors = np.linspace(t_start, t_end, intervals)
@@ -50,7 +50,7 @@ class Curve:
 
     def plot_forward_rates(self, t_start=None, t_end=None):
         t_start = t_start if t_start is not None else 0
-        t_end = t_end if t_end is not None else self.df_provider.times[-2]
+        t_end = t_end if t_end is not None else 50
         intervals = int((t_end - t_start) * 10)
 
         tenors = np.linspace(t_start, t_end, intervals)
