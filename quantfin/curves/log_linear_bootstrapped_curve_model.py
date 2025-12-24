@@ -1,7 +1,7 @@
 from quantfin.bootstrap.interpolation import LogLinearInterpolator
 import numpy as np
 
-class InterpolateDFProvider:
+class LogLinearBootstrappedCurveModel:
     def __init__(self):
         self.times = [0]
         self.dfs = [1]

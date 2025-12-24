@@ -18,7 +18,7 @@ def test_bootstrapper_rates():
     ]
 
     curve_manager = CurveManager()
-    curves = curve_manager.build(ois_swaps, swaps3m, mode="bootstrap")
+    curves = curve_manager.build(ois_swaps, swaps3m, model="log_linear_bootstrapped")
 
     ois_curve = curves["ois"]
     ibor3m_curve = curves["3m"]
@@ -50,7 +50,7 @@ def test_bootstrapper_swap_prices():
     ois_instruments = ois_futures + ois_swaps
 
     curve_manager = CurveManager()
-    curves = curve_manager.build(ois_instruments, swaps3m, mode="bootstrap")
+    curves = curve_manager.build(ois_instruments, swaps3m, model="log_linear_bootstrapped")
 
     ois_curve = curves["ois"]
     ibor3m_curve = curves["3m"]

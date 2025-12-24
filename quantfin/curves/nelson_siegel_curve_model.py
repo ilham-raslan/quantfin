@@ -1,7 +1,7 @@
 import math
 import numpy as np
 
-class NelsonSiegelDFProvider:
+class NelsonSiegelCurveModel:
     def __init__(self, beta0, beta1, beta2, tau):
         self.beta0 = beta0
         self.beta1 = beta1

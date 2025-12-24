@@ -11,7 +11,7 @@ swaps3m = SWAPS_3M
 
 # Build the OIS and 3m Ibor curve needed to price the caplet
 curve_manager = CurveManager()
-curves = curve_manager.build(ois_swaps, swaps3m, mode="bootstrap")
+curves = curve_manager.build(ois_swaps, swaps3m, model="log_linear_bootstrapped")
 
 ois_curve = curves["ois"]
 ibor3m_curve = curves["3m"]

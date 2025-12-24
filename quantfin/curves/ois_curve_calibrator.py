@@ -2,7 +2,7 @@ import numpy as np
 from scipy.optimize import least_squares
 
 from quantfin.curves.curve import Curve
-from quantfin.curves.nelson_siegel_df_provider import NelsonSiegelDFProvider
+from quantfin.curves.nelson_siegel_curve_model import NelsonSiegelCurveModel
 from quantfin.optimiser.gauss_newton_optimiser import GaussNewtonOptimiser
 from quantfin.optimiser.levenberg_marquardt_optimiser import LevenbergMarquardtOptimiser
 from quantfin.optimiser.sqp_optimiser import SQPOptimiser
@@ -17,7 +17,7 @@ class OISCurveCalibrator:
 
     def residuals(self, params, *args):
         beta0, beta1, beta2, tau = params
-        ois_curve = Curve(NelsonSiegelDFProvider(beta0, beta1, beta2, tau))
+        ois_curve = Curve(NelsonSiegelCurveModel(beta0, beta1, beta2, tau))
         instruments = args
 
         return np.array([
@@ -76,4 +76,4 @@ class OISCurveCalibrator:
         else:
             raise Exception("Calibration engine " + engine + " unsupported")
 
-        return Curve(NelsonSiegelDFProvider(beta0_fit, beta1_fit, beta2_fit, tau_fit))
+        return Curve(NelsonSiegelCurveModel(beta0_fit, beta1_fit, beta2_fit, tau_fit))

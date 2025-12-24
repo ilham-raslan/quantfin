@@ -2,17 +2,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Curve:
-    def __init__(self, df_provider):
-        self.df_provider = df_provider
+    def __init__(self, curve_model):
+        self.curve_model = curve_model
 
     def df(self, t):
-        return self.df_provider.df(t)
+        return self.curve_model.df(t)
 
     def zero_rate(self, t):
-        return self.df_provider.zero_rate(t)
+        return self.curve_model.zero_rate(t)
 
     def forward_rate(self, t1, t2):
-        return self.df_provider.forward_rate(t1, t2)
+        return self.curve_model.forward_rate(t1, t2)
 
     def plot_dfs(self, t_start=None, t_end=None):
         t_start = t_start if t_start is not None else 0

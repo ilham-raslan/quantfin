@@ -8,7 +8,7 @@ ois_swaps = OIS_SWAPS
 swaps3m = SWAPS_3M
 
 curve_manager = CurveManager()
-curves = curve_manager.build(ois_swaps, swaps3m, mode="bootstrap")
+curves = curve_manager.build(ois_swaps, swaps3m, model="log_linear_bootstrapped")
 # still working on nelson siegel optimisation
 # curves = curve_manager.build(ois_swaps, swaps3m, mode="nelson_siegel", calibration_engine="levenberg_marquardt")
 

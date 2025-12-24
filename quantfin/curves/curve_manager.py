@@ -4,8 +4,8 @@ from quantfin.curves.ois_curve_calibrator import OISCurveCalibrator
 
 
 class CurveManager:
-    def build(self, ois_swaps, swaps3m, mode="bootstrap", calibration_engine="scipy"):
-        if mode == "bootstrap":
+    def build(self, ois_swaps, swaps3m, model="log_linear_bootstrapped", calibration_engine="scipy"):
+        if model == "log_linear_bootstrapped":
             bootstrapper = MultiCurveBootstrapper(ois_swaps, swaps3m)
             curves = bootstrapper.fit()
 
@@ -13,7 +13,7 @@ class CurveManager:
                 "ois": curves["ois"],
                 "3m": curves["3m"]
             }
-        elif mode == "nelson_siegel":
+        elif model == "nelson_siegel":
             ois_curve_calibrator = OISCurveCalibrator(ois_swaps)
             ois_curve = ois_curve_calibrator.calibrate(calibration_engine)
 
@@ -25,4 +25,4 @@ class CurveManager:
                 "3m": ibor_curve
             }
         else:
-            raise ValueError(f"Curve build mode {mode} is not supported")
+            raise ValueError(f"Curve build mode {model} is not supported")
