@@ -8,7 +8,7 @@ swaps_3m = SWAPS_3M
 ois_instruments = ois_futures + ois_swaps
 
 curve_manager = CurveManager()
-curves = curve_manager.build(ois_instruments, swaps_3m, model="nelson_siegel", calibration_engine="levenberg_marquardt")
+curves = curve_manager.build(ois_instruments, swaps_3m, model="log_linear_bootstrapped")
 
 ois_curve = curves["ois"]
 ibor3m_curve = curves["3m"]
@@ -22,5 +22,5 @@ print("1.5y ois zero rate: " + str(zero))
 fwd = ibor3m_curve.forward_rate(1.0, 1.25)
 print("1.0 to 1.25 forward rate: " + str(fwd))
 
-ois_curve.plot_dfs(0, 5)
-ibor3m_curve.plot_forward_rates(0, 5)
+ois_curve.plot_dfs(0.25, 5)
+ibor3m_curve.plot_forward_rates(0.25, 5)

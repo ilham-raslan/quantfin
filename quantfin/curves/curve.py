@@ -15,7 +15,7 @@ class Curve:
         return self.curve_model.forward_rate(t1, t2)
 
     def plot_dfs(self, t_start=None, t_end=None):
-        t_start = t_start if t_start is not None else 0
+        t_start = t_start if t_start is not None else 0.25
         t_end = t_end if t_end is not None else 50
         intervals = int((t_end - t_start) * 10)
 
@@ -30,7 +30,7 @@ class Curve:
         plt.show()
 
     def plot_zero_rates(self, t_start=None, t_end=None):
-        t_start = t_start if t_start is not None else 0
+        t_start = t_start if t_start is not None else 0.25
         t_end = t_end if t_end is not None else 50
         intervals = int((t_end - t_start) * 10)
 
@@ -49,7 +49,7 @@ class Curve:
         plt.show()
 
     def plot_forward_rates(self, t_start=None, t_end=None):
-        t_start = t_start if t_start is not None else 0
+        t_start = t_start if t_start is not None else 0.25
         t_end = t_end if t_end is not None else 50
         intervals = int((t_end - t_start) * 10)
 

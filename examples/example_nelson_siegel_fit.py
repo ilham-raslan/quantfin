@@ -22,5 +22,5 @@ print("1.5y ois zero rate: " + str(zero))
 fwd = ibor3m_curve.forward_rate(1.0, 1.25)
 print("1.0 to 1.25 forward rate: " + str(fwd))
 
-ois_curve.plot_dfs(0, 5)
-ibor3m_curve.plot_forward_rates(0, 5)
+ois_curve.plot_dfs(0.25, 5)
+ibor3m_curve.plot_forward_rates(0.25, 5)

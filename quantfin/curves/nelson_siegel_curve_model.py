@@ -9,18 +9,11 @@ class NelsonSiegelCurveModel:
         self.tau = tau
 
     def df(self, t):
-        # Linear interpolation between 0 and 0.25
-        if t <= 0.25:
-            t_knot = 0.25
-            power_term = self.beta0 * t_knot + (self.beta1 + self.beta2) * (1 - math.exp(-t_knot / self.tau) * self.tau) - self.beta2 * t_knot * math.exp(-t_knot / self.tau)
-            df_knot = math.exp(-power_term)
-            df_0 = 1
+        if t <= 0.0:
+            return 1.0
 
-            df = df_0 + (t / t_knot) * (df_knot - df_0)
-        else:
-            power_term = self.beta0 * t + (self.beta1 + self.beta2) * (1 - math.exp(-t / self.tau) * self.tau) - self.beta2 * t * math.exp(-t / self.tau)
-
-            df = math.exp(-power_term)
+        power_term = self.beta0 * t + (self.beta1 + self.beta2) * (1 - math.exp(-t / self.tau) * self.tau) - self.beta2 * t * math.exp(-t / self.tau)
+        df = math.exp(-power_term)
 
         return df
 
