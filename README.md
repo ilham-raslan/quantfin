@@ -41,10 +41,10 @@ pip install -r requirements.txt
 See: `examples/example_bootstrap.py`
 
 ```python
-from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
 from quantfin.instruments.ois_swap import OISSwap
 from quantfin.instruments.swap_3m import Swap3M
 from quantfin.instruments.ois_future import OISFuture
+from quantfin.curves.curve_manager import CurveManager
 
 # Explicit market data
 ois_futures = [
@@ -73,8 +73,8 @@ swaps3m = [
 
 ois_instruments = ois_futures + ois_swaps
 
-bootstrapper = MultiCurveBootstrapper(ois_instruments, swaps3m)
-curves = bootstrapper.fit()
+curve_manager = CurveManager()
+curves = curve_manager.build(ois_instruments, swaps3m)
 
 ois_curve = curves["ois"]
 ibor_curve = curves["3m"]
@@ -146,13 +146,12 @@ See: `examples/example_caplet_pricing.py`
 ```python
 from quantfin.vol.caplet3m_vol_surface import Caplet3MVolSurface
 from quantfin.instruments.caplet_3m import Caplet3M
-from quantfin.instruments.ois_swap import OISSwap
-from quantfin.instruments.swap_3m import Swap3M
 from quantfin.bootstrap.bootstrapper import MultiCurveBootstrapper
+from examples.data.markets import CAPLETS_3M, OIS_SWAPS, SWAPS_3M
 
-ois_swaps = [...]     # List of OISSwap instruments
-swaps3m = [...]       # List of 3M Swap instruments
-caplets_3m = [...]    # List of Caplet3M instruments
+caplets_3m = CAPLETS_3M # List of Caplet3M instruments
+ois_swaps = OIS_SWAPS   # List of OISSwap instruments
+swaps3m = SWAPS_3M      # List of 3M Swap instruments
 
 bootstrapper = MultiCurveBootstrapper(ois_swaps, swaps3m)
 curves = bootstrapper.fit()
