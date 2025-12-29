@@ -240,7 +240,10 @@ Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardt
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
 
-### 3. General Optimisation
+### 3. General Pricing
+- Build Monte Carlo pricer for more complex payoffs
+
+### 4. General Optimisation
 - Performance tracking, e.g. residuals/RMSE over time, etc.
 - Better handling of singular values in calibration
 - More aggressive step sizes combined with trust region guardrails, instead of current 0.5 multiplier
