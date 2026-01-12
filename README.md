@@ -242,7 +242,7 @@ Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardt
   - Swaptions
 
 ### 3. General Pricing
-- Build Monte Carlo pricer for more complex payoffs, e.g. digital caplets
+- Build Monte Carlo pricer for more complex payoffs, e.g. asian caplets
 
 ### 4. General Optimisation
 - Performance tracking, e.g. residuals/RMSE over time, etc.
