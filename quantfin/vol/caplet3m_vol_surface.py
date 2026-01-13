@@ -10,24 +10,47 @@ class Caplet3MVolSurface:
     def __init__(self, caplets = None, ibor_curve = None):
         self.caplets = caplets if caplets is not None else []
         self.ibor_curve = ibor_curve
-        self.model = None
+        self.models = {}
 
     def add_caplet(self, caplet):
         self.caplets.append(caplet)
 
     def calibrate(self, engine="scipy"):
-        calibrator = Caplet3MVolCalibrator(self.caplets, self.ibor_curve)
-        self.model = calibrator.calibrate(engine=engine)
+        expiry_to_indices = {}
+
+        for i, caplet in enumerate(self.caplets):
+            if caplet.expiry not in expiry_to_indices:
+                expiry_to_indices[caplet.expiry] = [i]
+            else:
+                expiry_to_indices[caplet.expiry].append(i)
+
+        for expiry, indices in expiry_to_indices.items():
+            caplets = [self.caplets[i] for i in indices]
+            calibrator = Caplet3MVolCalibrator(caplets, self.ibor_curve)
+            self.models[expiry] = calibrator.calibrate(engine=engine)
 
     def get_vol(self, expiry, strike, forward):
         """Return interpolated vol for a given expiry/strike"""
-        if self.model is not None:
-            return self.model.get_vol(expiry, strike, forward)
-        else:
+        if not self.models:
             raise Exception("Model is not yet calibrated, run calibrate() first")
 
+        i, point = 0, 0
+        expiries = list(self.models.keys())
+        for i, point in enumerate(expiries):
+            if expiry == point:
+                return self.models[point].get_vol(expiry, strike, forward)
+            elif expiry > point:
+                continue
+            else:
+                break
+
+        left_vol = self.models[expiries[i - 1]].get_vol(expiry, strike, forward)
+        right_vol = self.models[expiries[i]].get_vol(expiry, strike, forward)
+
+        return left_vol + ((right_vol - left_vol) / (expiries[i] - expiries[i - 1])) * (expiry - expiries[i - 1])
+
     def plot_calibrated_vol_surface(self, expiry_start, expiry_end, strike_start, strike_end):
-        if self.model is None:
+        if not self.models:
             raise Exception("Model is not yet calibrated, run calibrate() first")
 
         expiry_intervals = 100

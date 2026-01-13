@@ -237,7 +237,6 @@ Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardt
 - Tests for interpolated values, not just at knots
 
 ### 2. Volatility Calibration
-- Per-expiry smile calibration instead of global calibration performed currently
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
 
