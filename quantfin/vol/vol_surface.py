@@ -50,7 +50,7 @@ class VolSurface:
             else:
                 break
 
-        left_vol = self.models[expiries[i - 1]].get_vol(expiry, strike, forward)
-        right_vol = self.models[expiries[i]].get_vol(expiry, strike, forward)
+        left_vol = self.models[expiries[i - 1]].get_vol(expiries[i - 1], strike, forward)
+        right_vol = self.models[expiries[i]].get_vol(expiries[i], strike, forward)
 
         return left_vol + ((right_vol - left_vol) / (expiries[i] - expiries[i - 1])) * (expiry - expiries[i - 1])
