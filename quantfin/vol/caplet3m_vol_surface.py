@@ -35,7 +35,7 @@ class Caplet3MVolSurface:
             raise Exception("Model is not yet calibrated, run calibrate() first")
 
         i, point = 0, 0
-        expiries = list(self.models.keys())
+        expiries = sorted(list(self.models.keys()))
         for i, point in enumerate(expiries):
             if expiry == point:
                 return self.models[point].get_vol(expiry, strike, forward)

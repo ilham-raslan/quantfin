@@ -239,6 +239,7 @@ Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardt
 ### 2. Volatility Calibration
 - Pricing and Product-specific SABR calibration for:
   - Swaptions
+- More robust/more thought on interpolation between expiries beyond linear interpolation
 
 ### 3. General Pricing
 - Build Monte Carlo pricer for more complex payoffs, e.g. asian caplets
