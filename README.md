@@ -241,8 +241,10 @@ Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardt
   - Swaptions
 - More robust/more thought on interpolation between expiries beyond linear interpolation
 
-### 3. General Pricing
-- Build Monte Carlo pricer for more complex payoffs, e.g. asian caplets
+### 3. Monte Carlo Pricing
+- Improve on current fixed iteration, fixed increment monte carlo simulation
+  - Use variance reduction techniques, e.g. antithetic or control variables
+  - Stop at threshold variance instead of fixed iterations
 
 ### 4. General Optimisation
 - Performance tracking, e.g. residuals/RMSE over time, etc.
