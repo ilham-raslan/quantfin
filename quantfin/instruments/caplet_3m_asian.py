@@ -19,7 +19,7 @@ class Caplet3MAsian:
     Monte Carlo implementation of asian caplet price, uses SABR model dF = sigma * sqrt(F) * sqrt(dT) * z
     Avoids negative values by truncating forward rates at 0, which will introduce slight bias.
     """
-    def price(self, ois_curve, ibor_curve, vol_surface, iterations=10000, increment=0.01):
+    def price(self, ois_curve, ibor_curve, vol_surface, iterations=1000, increment=0.001):
         notional = self.notional
         expiry = self.expiry
         strike = self.strike
@@ -38,7 +38,7 @@ class Caplet3MAsian:
             for j in range(timesteps):
                 z = random.gauss(0, 1)
                 # here we use truncation at 0
-                F_pos = max(F_list[-1] + sigma * math.sqrt(F_list[-1]) * math.sqrt(increment) * z, 0)
+                F_pos = F_list[-1] + sigma * F_list[-1] * math.sqrt(increment) * z
                 F_list.append(F_pos)
 
             F = sum(F_list[1:]) / timesteps

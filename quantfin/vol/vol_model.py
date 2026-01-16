@@ -6,7 +6,7 @@ class VolModel:
         self.alpha = alpha
         self.rho = rho
         self.nu = nu
-        self.beta = 0.5
+        self.beta = 1
 
     def safe_params(self, x):
         return np.array([
