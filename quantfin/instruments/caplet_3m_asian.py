@@ -35,7 +35,7 @@ class Caplet3MAsian:
             for j in range(timesteps):
                 z = random.gauss(0, 1)
                 # here we use truncation at 0
-                F_pos = max(F_list[-1] + sigma * (math.sqrt(F_list[-1])) * math.sqrt(increment) * z, 0)
+                F_pos = max(F_list[-1] + sigma * math.sqrt(F_list[-1]) * math.sqrt(increment) * z, 0)
                 F_list.append(F_pos)
 
             F = sum(F_list) / timesteps
