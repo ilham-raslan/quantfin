@@ -15,8 +15,11 @@ class Caplet3MAsian:
     def forward_rate(self, ibor_curve):
         return ibor_curve.forward_rate(self.expiry, self.expiry + self.accrual)
 
-    def price(self, ois_curve, ibor_curve, vol_surface, iterations=1000, increment=0.01):
-        # We do monte carlo simulations to find the average 3m forward rate, then use that in the payoff
+    """
+    Monte Carlo implementation of asian caplet price, uses SABR model dF = sigma * sqrt(F) * sqrt(dT) * z
+    Avoids negative values by truncating forward rates at 0, which will introduce slight bias.
+    """
+    def price(self, ois_curve, ibor_curve, vol_surface, iterations=10000, increment=0.01):
         notional = self.notional
         expiry = self.expiry
         strike = self.strike
@@ -38,7 +41,7 @@ class Caplet3MAsian:
                 F_pos = max(F_list[-1] + sigma * math.sqrt(F_list[-1]) * math.sqrt(increment) * z, 0)
                 F_list.append(F_pos)
 
-            F = sum(F_list) / timesteps
+            F = sum(F_list[1:]) / timesteps
             C = notional * df * max(F - strike, 0)
             C_list.append(C)
 
