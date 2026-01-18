@@ -264,3 +264,4 @@ Base class for optimisers, inherited by GaussNewtonOptimiser, LevenbergMarquardt
 - Equivalent Black Volatilities by Hagan
 - Options, Futures and Other Derivatives by Hull
 - Numerical Optimization by Nocedal
+- Monte Carlo Methods in Financial Engineering by Glasserman
