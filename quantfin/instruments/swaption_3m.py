@@ -16,7 +16,7 @@ class Swaption3M:
     def forward_swap_rate(self, ois_curve, ibor_curve):
         schedule = np.arange(self.expiry + self.accrual, self.expiry + self.tenor + 1e-12, self.accrual)
         denominator = sum(self.accrual * ois_curve.df(time) for time in schedule)
-        numerator = sum(self.accrual * ibor_curve.forward_rate(time, time + self.accrual) * ois_curve.df(time) for time in schedule)
+        numerator = sum(self.accrual * ibor_curve.forward_rate(time - self.accrual, time) * ois_curve.df(time) for time in schedule)
         return numerator / denominator
 
     def price(self, ois_curve, ibor_curve, vol_surface):
@@ -28,7 +28,7 @@ class Swaption3M:
         notional = self.notional
 
         schedule = np.arange(expiry + accrual, expiry + tenor + 1e-12, accrual)
-        annuity = sum(forward_swap_rate * ois_curve.df(time) for time in schedule)
+        annuity = sum(accrual * ois_curve.df(time) for time in schedule)
         sigma = 0.2 # TODO: Actually build a swaption vol surface
         # sigma = vol_surface.get_vol(expiry, strike, forward)
 
