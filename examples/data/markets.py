@@ -2,6 +2,7 @@ from quantfin.instruments.caplet_3m import Caplet3M
 from quantfin.instruments.ois_future import OISFuture
 from quantfin.instruments.ois_swap import OISSwap
 from quantfin.instruments.swap_3m import Swap3M
+from quantfin.instruments.swaption_3m import Swaption3M
 
 OIS_FUTURES = [OISFuture(maturity, rate) for maturity, rate in [
     (0.25, 0.9810),   # implies 1.90%
@@ -57,4 +58,44 @@ CAPLETS_3M = [Caplet3M(expiry, strike, notional, market_vol) for expiry, strike,
     (5.0, 0.0400, 0.25, 0.245),
     (5.0, 0.0425, 0.25, 0.26),
     (5.0, 0.0450, 0.25, 0.29)
+]]
+
+SWAPTIONS_3M = [Swaption3M(expiry, tenor, strike, notional, market_vol)
+for expiry, tenor, strike, notional, market_vol in [
+
+    # ===== Expiry 1.0y, Tenor 2.0y — ATM ≈ 0.025 =====
+    (1.0, 2.0, 0.0200, 1.0, 0.235),
+    (1.0, 2.0, 0.0225, 1.0, 0.195),
+    (1.0, 2.0, 0.0250, 1.0, 0.18),
+    (1.0, 2.0, 0.0275, 1.0, 0.19),
+    (1.0, 2.0, 0.0300, 1.0, 0.215),
+
+    # ===== Expiry 1.0y, Tenor 5.0y — ATM ≈ 0.027 =====
+    (1.0, 5.0, 0.0220, 1.0, 0.225),
+    (1.0, 5.0, 0.0245, 1.0, 0.19),
+    (1.0, 5.0, 0.0270, 1.0, 0.175),
+    (1.0, 5.0, 0.0295, 1.0, 0.185),
+    (1.0, 5.0, 0.0320, 1.0, 0.205),
+
+    # ===== Expiry 2.0y, Tenor 5.0y — ATM ≈ 0.030 =====
+    (2.0, 5.0, 0.0250, 1.0, 0.265),
+    (2.0, 5.0, 0.0275, 1.0, 0.215),
+    (2.0, 5.0, 0.0300, 1.0, 0.20),
+    (2.0, 5.0, 0.0325, 1.0, 0.21),
+    (2.0, 5.0, 0.0350, 1.0, 0.235),
+
+    # ===== Expiry 5.0y, Tenor 5.0y — ATM ≈ 0.035 =====
+    (5.0, 5.0, 0.0300, 1.0, 0.31),
+    (5.0, 5.0, 0.0325, 1.0, 0.255),
+    (5.0, 5.0, 0.0350, 1.0, 0.24),
+    (5.0, 5.0, 0.0375, 1.0, 0.255),
+    (5.0, 5.0, 0.0400, 1.0, 0.285),
+
+    # ===== Expiry 5.0y, Tenor 10.0y — ATM ≈ 0.037 =====
+    (5.0, 10.0, 0.0320, 1.0, 0.295),
+    (5.0, 10.0, 0.0345, 1.0, 0.245),
+    (5.0, 10.0, 0.0370, 1.0, 0.23),
+    (5.0, 10.0, 0.0395, 1.0, 0.245),
+    (5.0, 10.0, 0.0420, 1.0, 0.275),
+
 ]]

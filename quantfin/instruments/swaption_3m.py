@@ -5,10 +5,10 @@ from scipy.stats import norm
 
 
 class Swaption3M:
-    def __init__(self, expiry, strike, tenor, notional=1, market_vol=None):
+    def __init__(self, expiry, tenor, strike, notional=1, market_vol=None):
         self.expiry = expiry
-        self.strike = strike
         self.tenor = tenor
+        self.strike = strike
         self.notional = notional
         self.market_vol = market_vol
         self.accrual = 0.25
@@ -29,8 +29,8 @@ class Swaption3M:
 
         schedule = np.arange(expiry + accrual, expiry + tenor + 1e-12, accrual)
         annuity = sum(accrual * ois_curve.df(time) for time in schedule)
-        sigma = 0.2 # TODO: Actually build a swaption vol surface
-        # sigma = vol_surface.get_vol(expiry, strike, forward)
+        # sigma = 0.2 # TODO: Actually build a swaption vol surface
+        sigma = vol_surface.get_vol(expiry, tenor, strike, forward_swap_rate)
 
         d_1 = (math.log(forward_swap_rate / strike) + (sigma ** 2) * expiry / 2) / (sigma * math.sqrt(expiry))
         d_2 = d_1 - sigma * math.sqrt(expiry)
